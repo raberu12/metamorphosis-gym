@@ -1,15 +1,12 @@
 import React from 'react'
 import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import About from './Pages/About'
 
-const App = () => {
+const Home = () => {
   return (
     <div>
-      {/* Navbar */}
-      <Router>
-        <Navbar />
-      </Router>
       {/* Hero Section */}
       <div
         className="flex h-full items-start justify-start bg-cover bg-center"
@@ -73,10 +70,23 @@ const App = () => {
           </div>
         </div>
       </div>
-      <Router>
-        <Footer />
-      </Router>
     </div>
+  )
+}
+
+const App = () => {
+  return (
+    <Router>
+      <div>
+        {/* Navbar */}
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   )
 }
 

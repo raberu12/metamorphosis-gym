@@ -1,40 +1,51 @@
 import React from 'react'
-import { FaFacebookF, FaInstagram, FaYoutube, FaTiktok } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
-
-const SocialIcon = ({ to, icon, bgColor }) => (
-  <li className={`rounded-full bg-${bgColor} m-2 p-2 text-4xl text-white`}>
-    <Link to={to} target="_blank" rel="noopener noreferrer">
-      {icon}
-    </Link>
-  </li>
-)
+import { FaInstagram, FaYoutube, FaFacebook, FaTiktok } from 'react-icons/fa'
 
 const Footer = () => {
   return (
-    <footer className="flex flex-row items-center justify-center">
-      <ul className="m-4 flex gap-6">
-        <SocialIcon
-          to="https://www.facebook.com/"
-          icon={<FaFacebookF />}
-          bgColor="blue-600"
-        />
-        <SocialIcon
-          to="https://www.instagram.com/"
-          icon={<FaInstagram />}
-          bgColor="gradient-to-tr from-yellow-300 via-red-600 to-purple-600"
-        />
-        <SocialIcon
-          to="https://www.tiktok.com/"
-          icon={<FaTiktok />}
-          bgColor="black"
-        />
-        <SocialIcon
-          to="https://www.youtube.com/"
-          icon={<FaYoutube />}
-          bgColor="red-600"
-        />
-      </ul>
+    <footer className="p-4 text-white">
+      <div className="flex justify-center space-x-9">
+        <a
+          href="https://www.instagram.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:scale-110 transition-transform duration-300 transform-gpu"
+        >
+          <div className="rounded-full bg-gradient-to-tr from-yellow-500 via-red-500 to-purple-600 p-2">
+            <FaInstagram size="2em" />
+          </div>
+        </a>
+        <a
+          href="https://www.youtube.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:scale-110 transition-transform duration-300 transform-gpu"
+        >
+          <div className="rounded-full bg-red-500 p-2">
+            <FaYoutube size="2em" />
+          </div>
+        </a>
+        <a
+          href="https://www.facebook.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:scale-110 transition-transform duration-300 transform-gpu"
+        >
+          <div className="rounded-full bg-blue-600 p-2">
+            <FaFacebook size="2em" />
+          </div>
+        </a>
+        <a
+          href="https://www.tiktok.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:scale-110 transition-transform duration-300 transform-gpu"
+        >
+          <div className="rounded-full bg-black p-2">
+            <FaTiktok size="2em" />
+          </div>
+        </a>
+      </div>
     </footer>
   )
 }
