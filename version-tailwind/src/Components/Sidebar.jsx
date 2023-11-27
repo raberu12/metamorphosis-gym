@@ -43,7 +43,7 @@ import { Link } from 'react-router-dom'
                                     <img
                                         src={sidebarIcon[link.to.replace('/', '')]}
                                         alt={`${link.text} icon`}
-                                        className='w-8 h-8 ml-4 mt-3' 
+                                        className='w-8 h-8 ml-4 mt-3 mb-4' 
                                     />
                                     
                                     <Link 
@@ -56,11 +56,11 @@ import { Link } from 'react-router-dom'
                             ))}
                         </ul>
                     </div>
-                    <div className=' fixed mt-96 ml-12'>
+                    <div className=' fixed mt-60 ml-8'>
                         <button 
-                            className='bg-orangish w-32 h-12 rounded-lg cursor-pointer text-xl'>
-                                {/* <img src='log-out.png' className='absolute ml-4 w-4 h-4'></img> */}
-                                Log out
+                            className='bg-orangish w-36 h-12 rounded-lg cursor-pointer text-lg'>
+                                <img src='log-out.png' className='absolute ml-4 w-8 h-8'></img>
+                                <p className='ml-8'>Log out</p>
                         </button>
                     </div>
                 </div>
