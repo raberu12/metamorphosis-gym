@@ -23,7 +23,7 @@ const Home = () => {
           <p className="mt-4 text-xl italic text-white">
             Take control, transform your soul
           </p>
-          <button className="mt-4 w-36 rounded bg-orange-600 p-2 font-semibold italic text-white transition duration-300 hover:bg-red-900">
+          <button className="mt-4 w-36 rounded bg-orangish p-2 font-semibold italic text-white transition duration-300 hover:bg-red-900">
             GET STARTED
           </button>
         </div>

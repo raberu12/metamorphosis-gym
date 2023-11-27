@@ -6,7 +6,7 @@ const MembershipPlans = () => {
 
   const plans = [
     {
-      name: 'Non-member',
+      name: 'NON-MEMBER',
       price: 1500,
       features: [
         'Unlimited access to the gym during REGULAR HOURS',
@@ -90,7 +90,7 @@ const MembershipPlans = () => {
       <div className="flex flex-row justify-between">
         {plans.map((plan) => (
           <div key={plan.name} className="m-2 w-1/3">
-            <div className="flex h-full flex-col justify-between rounded-lg bg-orange-500 p-4 text-white shadow-lg transition-transform duration-300 ease-in-out hover:scale-105">
+            <div className="flex h-full flex-col justify-between rounded-lg bg-orangish p-4 text-white shadow-lg transition-transform duration-300 ease-in-out hover:scale-105">
               <div>
                 <h2 className="text-center text-6xl font-bold">{plan.name}</h2>
                 <p className="mb-4 mt-4 text-center text-xl font-bold">
@@ -103,7 +103,7 @@ const MembershipPlans = () => {
                       className="mb-3 flex items-center font-semibold"
                     >
                       <svg
-                        className="mr-2 h-5 w-5 rounded-full bg-green-500 text-white"
+                        className="mr-2 h-5 w-5 rounded-full bg-green-800 text-white"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -123,7 +123,7 @@ const MembershipPlans = () => {
               </div>
               <button
                 onClick={() => handleSubscribe(plan)}
-                className="mt-4 self-center rounded bg-blue-500 px-4 py-2 text-white"
+                className="mt-4 self-center rounded bg-dark-elixir px-4 py-2 text-white"
               >
                 SUBSCRIBE
               </button>

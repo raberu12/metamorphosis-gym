@@ -11,7 +11,7 @@ function Navbar() {
   ]
 
   return (
-    <div className="flex items-center justify-between bg-black">
+    <div className="flex items-center justify-between bg-dark-elixir">
       <div className="ml-4 text-lg font-bold text-white">LOGO HERE</div>
       <div className="container mx-auto flex justify-center">
         <ul className="flex h-20 space-x-16 font-bold text-white">
