@@ -3,6 +3,8 @@ import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import About from './Pages/About'
+import Register from './Pages/Register'
+import Gym from './Pages/Gym'
 
 const Home = () => {
   return (
@@ -83,6 +85,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/gym" element={<Gym />} />
         </Routes>
         <Footer />
       </div>
