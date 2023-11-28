@@ -3,11 +3,14 @@ import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import About from './Pages/About'
+import Register from './Pages/Register'
+import Gym from './Pages/Gym'
 import MembershipPlans from './Pages/Membership'
 import Sidebar from './Components/Sidebar'
 import FooterSide from './Components/SidebarFooter'
 import Consultation from './Pages/Consultation'
 import Overview from './Pages/Overview'
+
 
 const Home = () => {
   return (
@@ -24,7 +27,7 @@ const Home = () => {
           <p className="mt-4 text-xl italic text-white">
             Take control, transform your soul
           </p>
-          <button className="mt-4 w-36 rounded bg-orange-600 p-2 font-semibold italic text-white transition duration-300 hover:bg-red-900">
+          <button className="mt-4 w-36 rounded bg-orangish p-2 font-semibold italic text-white transition duration-300 hover:bg-red-900">
             GET STARTED
           </button>
         </div>
@@ -87,10 +90,12 @@ const App = () => {
         <Sidebar/>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/about" element={<About />}
           <Route path="/OverviewPage" element={<Overview />}/>
           <Route path="/MembershipPage" element={<MembershipPlans />}/>
           <Route path="/ConsultationPage" element={<Consultation/>}/>
+          <Route path="/register" element={<Register />} />
+          <Route path="/gym" element={<Gym />} />
         </Routes>
         <FooterSide/>
         {/* <Footer/> */}

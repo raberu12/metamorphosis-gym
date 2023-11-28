@@ -6,6 +6,17 @@ const MembershipPlans = () => {
 
   const plans = [
     {
+      name: 'NON-MEMBER',
+      price: 1500,
+      features: [
+        'Unlimited access to the gym during REGULAR HOURS',
+        'Use of standard gym equipment',
+        'Access to locker room amenities',
+        'Access to sauna room',
+        'Participate in various group fitness classes',
+      ],
+    },
+    {
       name: 'BASIC',
       price: 3000,
       features: [
@@ -92,7 +103,7 @@ const MembershipPlans = () => {
                       className="mb-3 flex items-center font-semibold"
                     >
                       <svg
-                        className="mr-2 h-5 w-5 rounded-full bg-green-500 text-white"
+                        className="mr-2 h-5 w-5 rounded-full bg-green-800 text-white"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -112,7 +123,7 @@ const MembershipPlans = () => {
               </div>
               <button
                 onClick={() => handleSubscribe(plan)}
-                className="mt-4 self-center rounded bg-blue-500 px-4 py-2 text-white"
+                className="mt-4 self-center rounded bg-dark-elixir px-4 py-2 text-white"
               >
                 SUBSCRIBE
               </button>
