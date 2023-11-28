@@ -1,83 +1,106 @@
 import React, { useState } from 'react';
-import Navbar from '../Components/Navbar'
-import Footer from '../Components/Footer'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BsEnvelope, BsPerson, BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs';
+import { FaLock } from 'react-icons/fa';
 
-const LogInRegister = () => {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [action, setAction] = useState("Register");
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-  };
-
-  const handleTogglePassword = () => {
+  const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const handleToggleConfirmPassword = () => {
+  const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
   };
 
-  
   return (
-    <div className="bg-color-sky-50">
-      <div className="text-black text-6xl font-bold text-center mt-28">WELCOME TO METAMORPHOSIS GYM</div>
-      <div className="text-white flex flex-col mt-16 gap-1 mx-auto items-center my-36 w-full md:w-3/5 lg:w-2/5 xl:w-1/5 bg-zinc-800 rounded-lg p-5">
-        <div className="flex flex-col items-center w-full mt-5">
-          <div className="text-4xl font-bold">{action}</div>
-        </div>
-        <form className="flex flex-col items-center mt-5">
-          {action === "Login" ? <div></div> : <div className="text-xl font-medium items-center w-full flex flex-col">USERNAME</div>}
-          <div className="flex flex-col items-center mt-2">
-            {action === "Login" ? <div></div> : <div className="text-black"><input type="text" id="username" /></div>}
-          </div>
-          <div className="text-xl font-medium items-center w-full flex flex-col">EMAIL</div>
-          <div className="flex items-center mx-auto h-12 rounded-1g">
-            <div className="text-black"><input type="email" id="email" /></div>
-          </div>
-          <div className="text-xl font-medium items-center w-full flex flex-col">PASSWORD</div>
-          <div className="flex items-center mx-auto h-12 rounded-1g">
-            <div className="text-black"><input
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              value={password}
-              onChange={handlePasswordChange}
-            />
+    <>
+      <div className='flex flex-col m-20 items-center h-screen'>
+        <h2 className='text-center font-bold text-7xl mt-18'>WELCOME TO METAMORPHOSIS GYM</h2>
+        <div className='flex flex-col h-auto w-1/3 mt-20 rounded-md bg-zinc-800'>
+          <div className='text-center mt-3 text-white font-semibold text-xl'>
+            <h2 className='text-5xl italic font-bold mt-10 mb-10'>REGISTER</h2>
+
+            <div>
+              USERNAME
+              <BsPerson className='text-black absolute h-8 w-28' />
+              <input className='text-black w-10/12 rounded-md mb-10 p-1 text-center' type='text' />
             </div>
-            <input type="checkbox" onChange={handleTogglePassword}
-            />
-          </div>
-          {action === "Login" ? <div></div> : <div className="text-xl font-medium items-center w-full flex flex-col">CONFIRM PASSWORD</div>}
-          <div className="flex items-center mx-auto h-12 rounded-1g">
-            <div className="text-black">{action === "Login" ? (<div></div>) : (<><input type={showConfirmPassword ? "text" : "password"} id="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange}
-            />
-              <input type="checkbox" onChange={handleToggleConfirmPassword}
+
+            <div>
+              EMAIL
+            </div>
+              <BsEnvelope className='text-black absolute p-1 h-8 w-28' />
+              <input className='text-black w-10/12 rounded-md mb-10 p-1 text-center' type='email' />
+
+            <div>
+              PASSWORD
+              <FaLock className='text-black absolute p-1 h-8 w-28' />
+            <div>
+            
+              <input
+                className='text-black w-10/12 rounded-md mb-10 p-1 text-center'
+                type={showPassword ? 'text' : 'password'}
               />
-            </>)}</div>
+              {showPassword ? (
+                <BsFillEyeSlashFill
+                  onClick={togglePasswordVisibility}
+                  className='text-white ml-2 shrink-0 absolute h-8 inline-block cursor-pointer'
+                />
+              ) : (
+                <BsFillEyeFill
+                  onClick={togglePasswordVisibility}
+                  className='text-white ml-2 shrink-0 absolute h-8 inline-block cursor-pointer'
+                />
+              )}
+              </div>
+              
+             
+            </div>
+
+            <div>
+              CONFIRM PASSWORD
+              <FaLock className='text-black absolute p-1 h-8 w-28' />
+              <input
+                className='text-black w-10/12 rounded-md p-1 text-center'
+                type={showConfirmPassword ? 'text' : 'password'}
+              />
+              {showConfirmPassword ? (
+                <BsFillEyeSlashFill
+                  onClick={toggleConfirmPasswordVisibility}
+                  className='text-white ml-2 shrink-0 absolute h-8 inline-block cursor-pointer'
+                />
+              ) : (
+                <BsFillEyeFill
+                  onClick={toggleConfirmPasswordVisibility}
+                  className='text-white ml-2 shrink-0 absolute h-8 inline-block cursor-pointer'
+                />
+              )}
+            </div>
+
+            <div className='grid grid-rows-2 items-center justify-center mt-14 text-center text-sm'>
+              <div className='w-96 h-10 font-semibold'>
+                <button
+                  className=' bg-zinc-900 rounded-md transition-transform transform hover:scale-110 duration-300 hover:bg-neutral-700 mr-10 h-12 w-24'
+                  type='button'
+                >
+                  REGISTER
+                </button>
+                Or
+                <button
+                  className='bg-zinc-900 rounded-md mb-12 transition-transform transform hover:scale-110 duration-300 hover:bg-neutral-700 ml-10 h-12 w-24'
+                  type='button'
+                >
+                  LOGIN
+                </button>
+              </div>
+            </div>
           </div>
-        </form>
-        {action === "Register" ? <div className="text-center text-sm mb-4">
-          Forget Password? <a href="#" className="text-blue-500 underline cursor-pointer" onClick={() => console.log("Forgot password clicked!")}>
-      Click here!
-    </a>
-        </div> : null}
-        <div className="flex w-28 bg-stone-700 rounded-md h-7 justify-center m-auto mt-2 transition-300 hover:bg-stone-900 cursor-pointer">
-          <div id={action === "Register" ? "" : "submit"} onClick={() => { setAction("Register") }}>Register</div>
-        </div>
-        <div className="flex w-28 bg-stone-700 rounded-md h-7 justify-center m-auto mt-2 transition-300 hover:bg-stone-900 cursor-pointer">
-          <div id={action === "Login" ? "" : "submit"} onClick={() => { setAction("Login") }}>Login</div>
         </div>
       </div>
-    </div>
+    </>
   );
-};
+}
 
-export default LogInRegister;
+export default Register;
