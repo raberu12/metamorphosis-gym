@@ -4,6 +4,10 @@ import Footer from './Components/Footer'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import About from './Pages/About'
 import MembershipPlans from './Pages/Membership'
+import Sidebar from './Components/Sidebar'
+import FooterSide from './Components/SidebarFooter'
+import Consultation from './Pages/Consultation'
+import Overview from './Pages/Overview'
 
 const Home = () => {
   return (
@@ -79,14 +83,17 @@ const App = () => {
   return (
     <Router>
       <div>
-        {/* Navbar */}
-        <Navbar />
+        {/* <Navbar/> */}
+        <Sidebar/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/membership" element={<MembershipPlans/>}/>
+          <Route path="/OverviewPage" element={<Overview />}/>
+          <Route path="/MembershipPage" element={<MembershipPlans />}/>
+          <Route path="/ConsultationPage" element={<Consultation/>}/>
         </Routes>
-        <Footer />
+        <FooterSide/>
+        {/* <Footer/> */}
       </div>
     </Router>
   )

@@ -13,27 +13,34 @@ import { Link } from 'react-router-dom'
         ]
 
         const sidebarIcon = {
-            OverviewPage: 'overviewicon.png',
-            MembershipPage: 'membership.png',
-            ConsultationPage: 'consultation.png',
-            EmailalertsPage: 'emailalert.png',
-            SettingsPage: 'settings.png'
+            OverviewPage: './images/overviewicon.png',
+            MembershipPage: './images/membership.png',
+            ConsultationPage: './images/consultation.png',
+            EmailalertsPage: './images/emailalert.png',
+            SettingsPage: './images/settings.png'
         }
 
         const personName = [
             {name: 'Jedd Juab'},
         ]
 
-        
+        const accountType = [
+            {type: 'non-member'},
+            {type: 'Basic'},
+            {tpye: 'Elite'}
+        ]
 
         
 
 
         return(
-                <div className='bg-dark-elixir h-screen w-52 fixed text-white '>
+                <div className='bg-dark-elixir h-full mx-auto w-52 fixed text-white '>
                     <div className='text-center flex flex-col'>
-                        <img src='icon.png' alt= 'profile pic' className='ml-14 mt-8 mb-20 w-24'/>
-                        <h2 className='mb-4'>{personName[0].name}</h2>
+                        <div className='mb-20 mt-8'>
+                                <img src='./images/icon.png' alt= 'profile pic' className='ml-14 w-24'/>
+                                <h2 className='mt-8'>{personName[0].name}</h2>
+                                <h2>{accountType[0].type}</h2>
+                        </div>
                         <ul>
                             {sidebarLinks.map((link, index) => (
                                 <li
@@ -56,10 +63,10 @@ import { Link } from 'react-router-dom'
                             ))}
                         </ul>
                     </div>
-                    <div className=' fixed mt-60 ml-8'>
+                    <div className=' fixed mt-64 ml-8'>
                         <button 
-                            className='bg-orangish w-36 h-12 rounded-lg cursor-pointer text-lg'>
-                                <img src='log-out.png' className='absolute ml-4 w-8 h-8'></img>
+                            className='bg-orangish w-36 h-12 rounded-xl cursor-pointer text-lg hover:bg-orange-800 transition-transform transform hover:scale-110 transition-duration-300'>
+                                <img src='./images/log-out.png' className='absolute ml-4 w-8 h-8'></img>
                                 <p className='ml-8'>Log out</p>
                         </button>
                     </div>

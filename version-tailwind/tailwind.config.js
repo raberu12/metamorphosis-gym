@@ -1,8 +1,17 @@
-/** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'dark-elixir' : '#302f4d',
+        'navbar':'#1C1E18',
+        'sidebar': '#635E7E',
+        'orangish': '#C84630'
+      }
+    },
   },
   plugins: [],
 }

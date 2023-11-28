@@ -6,17 +6,6 @@ const MembershipPlans = () => {
 
   const plans = [
     {
-      name: 'Non-member',
-      price: 1500,
-      features: [
-        'Unlimited access to the gym during REGULAR HOURS',
-        'Use of standard gym equipment',
-        'Access to locker room amenities',
-        'Access to sauna room',
-        'Participate in various group fitness classes',
-      ],
-    },
-    {
       name: 'BASIC',
       price: 3000,
       features: [
@@ -86,11 +75,11 @@ const MembershipPlans = () => {
 
   return (
     <div className="container mx-auto">
-      <h1 className="mb-3 mt-10 text-7xl font-bold">MEMBERSHIP PLANS</h1>
-      <div className="flex flex-row justify-between">
+      <h1 className="ml-8 text-dark-elixir mb-3 text-7xl font-extrabold">MEMBERSHIP PLANS</h1>
+      <div className="flex flex-row justify-center mt-28 ml-44">
         {plans.map((plan) => (
           <div key={plan.name} className="m-2 w-1/3">
-            <div className="flex h-full flex-col justify-between rounded-lg bg-orange-500 p-4 text-white shadow-lg transition-transform duration-300 ease-in-out hover:scale-105">
+            <div className="flex h-full flex-col justify-between rounded-lg bg-orangish p-4 text-white shadow-lg transition-transform duration-300 ease-in-out hover:scale-105">
               <div>
                 <h2 className="text-center text-6xl font-bold">{plan.name}</h2>
                 <p className="mb-4 mt-4 text-center text-xl font-bold">
