@@ -2,7 +2,7 @@ import React from 'react';
 
 const ImageWithDescription = ({ imageUrl, description, additionalDescription }) => {
   return (
-    <div className="flex flex-col items-center justify-center mb-4 w-96 min-h-128 bg-purple-950 text-white p-4 rounded-lg relative overflow-hidden">
+    <div className="flex flex-col items-center justify-center mb-4 w-96 min-h-128 bg-dark-elixir text-white p-4 rounded-lg relative overflow-hidden">
       <div className="image-container rounded-lg" style={{ height: '500px', width:'390px', marginTop: '-16px'}}> 
         <img
           src={imageUrl}
@@ -23,7 +23,7 @@ const Page = () => {
   return (
     <div className="bg-backgroundColor">
     <div className="container mx-auto py-8" >
-      <h1 className="text-5xl font-bold mb-4 text-center text-purple-950">
+      <h1 className="text-5xl font-bold mb-4 text-center text-dark-elixir">
         ELEVATE YOUR FITNESS<br />
         WITH<br />
         PROFESSIONAL GUIDANCE
@@ -35,17 +35,17 @@ const Page = () => {
       <br /> <br />
       <div className="flex flex-col md:flex-row md:justify-between md:gap-4">
         <ImageWithDescription
-          imageUrl="personalized-training_1.jpg"
+          imageUrl='./images/personalized-training_1.jpg'
           description="ONE-ON-ONE TRAINING"
           additionalDescription="Elevate your fitness with personalized expert guidance and achieve your goals confidently with tangible results."
         />
         <ImageWithDescription
-          imageUrl="gym2.png"
+          imageUrl='./images/gym2.png'
           description="24/7 ACCESS"
           additionalDescription="Experience unparalleled flexibility on your fitness journey with 24/7 access to personalized workouts. Exercise anytime and anywhere, at your own pace, and take your fitness experience to new heights."
         />
         <ImageWithDescription
-          imageUrl="consultation.jpg"
+          imageUrl='./images/consultation.jpg'
           description="FITNESS CONSULTATION"
           additionalDescription="Your coach will create a personalized fitness program based on a survey, conversation, and movement assessment to help you achieve your goals."
         />
