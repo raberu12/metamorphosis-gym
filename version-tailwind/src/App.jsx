@@ -6,6 +6,10 @@ import About from './Pages/About'
 import Register from './Pages/Register'
 import Gym from './Pages/Gym'
 import MembershipPlans from './Pages/Membership'
+import Sidebar from './Components/Sidebar'
+import FooterSide from './Components/SidebarFooter'
+import Consultation from './Pages/Consultation'
+import Overview from './Pages/Overview'
 
 
 const Home = () => {
@@ -82,19 +86,19 @@ const App = () => {
   return (
     <Router>
       <div>
-        {/* Navbar */}
-        <Navbar />
+        {/* <Navbar/> */}
+        <Sidebar/>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-
+          <Route path="/about" element={<About />}
+          <Route path="/OverviewPage" element={<Overview />}/>
+          <Route path="/MembershipPage" element={<MembershipPlans />}/>
+          <Route path="/ConsultationPage" element={<Consultation/>}/>
           <Route path="/register" element={<Register />} />
           <Route path="/gym" element={<Gym />} />
-
-          <Route path="/membership" element={<MembershipPlans/>}/>
-
         </Routes>
-        <Footer />
+        <FooterSide/>
+        {/* <Footer/> */}
       </div>
     </Router>
   )
