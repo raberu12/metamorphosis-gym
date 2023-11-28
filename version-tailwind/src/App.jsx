@@ -10,6 +10,8 @@ import Sidebar from './Components/Sidebar'
 import FooterSide from './Components/SidebarFooter'
 import Consultation from './Pages/Consultation'
 import Overview from './Pages/Overview'
+import Training from './Pages/Training'
+import Blog from './Pages/Blog'
 
 
 const Home = () => {
@@ -94,6 +96,8 @@ const App = () => {
           <Route path="/OverviewPage" element={<Overview />}/>
           <Route path="/MembershipPage" element={<MembershipPlans />}/>
           <Route path="/ConsultationPage" element={<Consultation/>}/>
+          <Route path="/TrainingPage" element={<Training />} />
+          <Route path="/BlogPage" element={<Blog />} />
           <Route path="/register" element={<Register />} />
           <Route path="/gym" element={<Gym />} />
         </Routes>
