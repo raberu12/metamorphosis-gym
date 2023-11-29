@@ -12,6 +12,7 @@ import Consultation from './Pages/Consultation'
 import Overview from './Pages/Overview'
 import Training from './Pages/Training'
 import Blog from './Pages/Blog'
+import Login from './Pages/Login'
 
 
 const Home = () => {
@@ -99,6 +100,7 @@ const App = () => {
           <Route path="/TrainingPage" element={<Training />} />
           <Route path="/BlogPage" element={<Blog />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/gym" element={<Gym />} />
         </Routes>
         <FooterSide/>
