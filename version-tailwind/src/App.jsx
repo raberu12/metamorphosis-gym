@@ -89,7 +89,7 @@ const App = () => {
   return (
     <Router>
       <div>
-        {/* <Navbar/> */}
+        <Navbar/>
         {/* <Sidebar/> */}
         <Routes>
           <Route path="/" element={<Home />} />
@@ -97,14 +97,14 @@ const App = () => {
           <Route path="/OverviewPage" element={<Overview />}/>
           <Route path="/MembershipPage" element={<MembershipPlans />}/>
           <Route path="/ConsultationPage" element={<Consultation/>}/>
-          <Route path="/TrainingPage" element={<Training />} />
-          <Route path="/BlogPage" element={<Blog />} />
+          <Route path="/training" element={<Training />} />
+          <Route path="/blog" element={<Blog />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/gym" element={<Gym />} />
         </Routes>
-        <FooterSide/>
-        {/* <Footer/> */}
+        {/* <FooterSide/> */}
+        <Footer/>
       </div>
     </Router>
   )

@@ -87,11 +87,11 @@ const Blog = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h1 className="text-5xl font-bold my-8 pr-20">Blog</h1>
+      <h1 className="text-7xl font-bold my-8 pr-20 text-dark-elixir">Blog</h1>
       <HeaderImageWithDescription imageUrl={headerContent.image} description={headerContent.caption} />
       <div className="grid grid-cols-2 gap-4 justify-center">
         {blogs.map((blog) => (
-          <div key={blog.id} className="p-4 flex items-center justify-center">
+          <div key={blog.id} className="p-4 flex items-center justify-center rounded-lg hover:scale-105 transition-transform cursor-pointer">
             <ImageWithDescription imageUrl={blog.image} description={blog.caption} />
           </div>
         ))}
