@@ -9,6 +9,7 @@ import {
 import { FaLock, FaGoogle } from 'react-icons/fa'
 
 function Login() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -34,14 +35,14 @@ function Login() {
       console.log('Login Response:', response.status, data)
 
       if (response.ok) {
-        // Login successful, store the token and handle further actions
         localStorage.setItem('token', data.token)
         setLoginError('')
-        // Redirect to the landing page after successful login
+        setIsLoggedIn(true)
         navigate('/')
       } else {
         setLoginError(data.message)
       }
+      console.log('Login Response:', response.status, data)
     } catch (error) {
       console.error('Login error:', error)
     }

@@ -1,4 +1,5 @@
 import React from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
@@ -7,13 +8,11 @@ import Register from './Pages/Register'
 import Gym from './Pages/Gym'
 import MembershipPlans from './Pages/Membership'
 import Sidebar from './Components/Sidebar'
-import FooterSide from './Components/SidebarFooter'
 import Consultation from './Pages/Consultation'
 import Overview from './Pages/Overview'
 import Training from './Pages/Training'
 import Blog from './Pages/Blog'
 import Login from './Pages/Login'
-
 
 const Home = () => {
   return (
@@ -86,25 +85,35 @@ const Home = () => {
 }
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      setIsLoggedIn(true)
+    }
+  }, [isLoggedIn])
   return (
     <Router>
       <div>
-        <Navbar/>
-        {/* <Sidebar/> */}
+        {isLoggedIn && <Sidebar key={isLoggedIn} />}
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />}/>~
-          <Route path="/OverviewPage" element={<Overview />}/>
-          <Route path="/MembershipPage" element={<MembershipPlans />}/>
-          <Route path="/ConsultationPage" element={<Consultation/>}/>
+          <Route path="/about" element={<About />} />~
+          <Route path="/OverviewPage" element={<Overview />} />
+          <Route path="/MembershipPage" element={<MembershipPlans />} />
+          <Route path="/ConsultationPage" element={<Consultation />} />
           <Route path="/training" element={<Training />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          <Route
+            path="/login"
+            element={<Login setIsLoggedIn={setIsLoggedIn} />}
+          />
           <Route path="/gym" element={<Gym />} />
         </Routes>
-        {/* <FooterSide/> */}
-        <Footer/>
+        <Footer />
       </div>
     </Router>
   )
