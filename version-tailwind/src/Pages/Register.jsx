@@ -86,16 +86,16 @@ function Register() {
   return (
     <>
       <div className="m-20 flex h-screen flex-col items-center">
-        <h2 className="mt-18 text-center text-7xl font-bold">
+        <h1 className="mt-18 text-center text-7xl font-extrabold">
           WELCOME TO METAMORPHOSIS GYM
-        </h2>
-        <div className="mt-20 flex h-auto w-1/3 flex-col rounded-md bg-zinc-800">
-          <div className="mt-3 text-center text-xl font-semibold text-white">
+        </h1>
+        <div className="mt-20 flex h-auto w-1/3 flex-col rounded-md bg-zinc-800 text-center ">
+          <div className="mt-3 text-xl font-semibold text-white">
             <h2 className="mb-10 mt-10 text-5xl font-bold italic">REGISTER</h2>
 
             <div>
               USERNAME
-              <BsPerson className="absolute h-8 w-28 text-black" />
+              <BsPerson className="absolute h-8 w-28 ml-2 mt-1 text-black" />
               <input
                 className="mb-10 w-10/12 rounded-md p-1 text-center text-black"
                 type="text"
@@ -106,7 +106,7 @@ function Register() {
 
             <div>
               <div>EMAIL</div>
-              <BsEnvelope className="absolute h-8 w-28 p-1 text-black" />
+              <BsEnvelope className="absolute h-8 w-28 p-1 ml-2 mt-1 text-black" />
               <input
                 className="mb-10 w-10/12 rounded-md p-1 text-center text-black"
                 type="email"
@@ -117,7 +117,7 @@ function Register() {
 
             <div>
               PASSWORD
-              <FaLock className="absolute h-8 w-28 p-1 text-black" />
+              <FaLock className="absolute h-8 w-28 p-1 ml-2 mt-1 text-black" />
               <div>
                 <input
                   className="mb-10 w-10/12 rounded-md p-1 text-center text-black"
@@ -141,7 +141,7 @@ function Register() {
 
             <div>
               CONFIRM PASSWORD
-              <FaLock className="absolute h-8 w-28 p-1 text-black" />
+              <FaLock className="absolute h-8 w-28 p-1 ml-2 mt-1 text-black" />
               <div>
                 <input
                   className="w-10/12 rounded-md p-1 text-center text-black"

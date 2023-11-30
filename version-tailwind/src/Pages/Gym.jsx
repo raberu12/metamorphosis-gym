@@ -36,8 +36,10 @@ function Gym() {
 
   return (
     <>
-      <div className="text-8xl italic font-extrabold text-center mt-8 mb-4 text-dark-elixir">Your Fitness Adventure Begins</div>
-      <div className="text-6xl italic font-extrabold text-center mb-6 text-dark-elixir">Here's Our Available Gym</div>
+      <div className="italic font-extrabold text-center mt-8 mb-16 text-dark-elixir">
+        <h1 className='text-8xl'>Your Fitness Adventure Begins</h1>
+        <h2 className='className="text-6xl mb-6 text-6xl'>Here's Our Available Gym</h2>
+      </div>
       <div className="grid grid-cols-3 gap-4 justify-center">
         {locationData.map((location, index) => (
           <div key={index} className="flex flex-col items-center">
