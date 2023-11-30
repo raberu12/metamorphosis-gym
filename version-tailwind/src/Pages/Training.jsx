@@ -23,15 +23,15 @@ const Page = () => {
   return (
     <div className="bg-backgroundColor">
     <div className="container mx-auto py-8" >
-      <h1 className="text-5xl font-bold mb-4 text-center text-dark-elixir">
+      <h1 className="text-8xl font-bold mb-4 text-center text-dark-elixir">
         ELEVATE YOUR FITNESS<br />
         WITH<br />
         PROFESSIONAL GUIDANCE
       </h1>
       <br />
-      <h2 className="text-l mb-4 text-center text-black">
+      <p className="text-xl mb-4 text-center text-black">
         Elevate your fitness with personalized expert guidance and achieve your goals confidently with tangible results.
-      </h2>
+      </p>
       <br /> <br />
       <div className="flex flex-col md:flex-row md:justify-between md:gap-4">
         <ImageWithDescription
