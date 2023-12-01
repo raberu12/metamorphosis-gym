@@ -81,7 +81,7 @@ const Blog = () => {
     {
       id: 6,
       image: './images/landing img.jpg',
-      caption: 'ACHIEVING WEIGHT LOSS: THE ULTIMATE GUIDE',
+      caption: 'ACHIEVING WEIGHT LOSS: THE ULTIMATE GUIDE lala',
     },
   ];
 
