@@ -2,11 +2,20 @@ const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2");
 const jwt = require("jsonwebtoken");
+const expressSession = require("express-session");
 
 const crypto = require("crypto");
 const app = express();
 const port = 3001;
 const secretKey = "123456789";
+
+app.use(
+  expressSession({
+    secret: secretKey,
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 app.use(cors());
 app.use(express.json());
@@ -122,6 +131,22 @@ app.post("/login", (req, res) => {
       res.status(200).json({ message: "Login successful.", token });
     }
   );
+});
+
+app.post("/logout", (req, res) => {
+  // Check if there is an active session
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Logout error:", err);
+        res.status(500).json({ message: "Logout failed" });
+      } else {
+        res.json({ message: "Logout successful" });
+      }
+    });
+  } else {
+    res.status(401).json({ message: "Not logged in" });
+  }
 });
 
 // Start the server
