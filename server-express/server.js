@@ -16,9 +16,20 @@ app.use(
     saveUninitialized: true,
   })
 );
-
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 // MySQL Database Connection
 const db = mysql.createConnection({
@@ -28,12 +39,46 @@ const db = mysql.createConnection({
   database: "gym-db",
 });
 
+// Middleware to verify JWT token
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  jwt.verify(token, secretKey, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    req.user = decoded;
+    next();
+  });
+};
+
 db.connect((err) => {
   if (err) {
     console.error("Database connection error:", err);
   } else {
     console.log("Connected to the database");
   }
+});
+
+// API endpoint to retrieve user information
+app.get("/user-info", verifyToken, (req, res) => {
+  // Log the decoded user object
+  console.log("Decoded user object:", req.user);
+
+  // Fetch user information from the database
+  const userInfo = {
+    name: req.user.username,
+    role: req.user.role,
+    // Other user-related data
+  };
+
+  // Send the user information as a response
+  res.json(userInfo);
 });
 
 /// Register endpoint
@@ -124,15 +169,18 @@ app.post("/login", (req, res) => {
           .json({ message: "Invalid username or password." });
       }
 
-      // Generate a token and send it in the response
-      const token = jwt.sign({ username }, secretKey, {
-        expiresIn: "1h",
-      });
+      // Generate a token and include the role in the payload
+      const token = jwt.sign(
+        { username, role: results[0].role }, // Include role in the payload
+        secretKey,
+        { expiresIn: "1h" }
+      );
       res.status(200).json({ message: "Login successful.", token });
     }
   );
 });
 
+//logout endpoint
 app.post("/logout", (req, res) => {
   // Check if there is an active session
   if (req.session) {

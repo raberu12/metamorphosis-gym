@@ -13,6 +13,7 @@ import Overview from './Pages/Overview'
 import Training from './Pages/Training'
 import Blog from './Pages/Blog'
 import Login from './Pages/Login'
+import { UserProvider } from './Components/UserContext'
 
 const Home = () => {
   return (
@@ -85,37 +86,28 @@ const Home = () => {
 }
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      setIsLoggedIn(true)
-    }
-  }, [isLoggedIn])
   return (
-    <Router>
-      <div>
-        {isLoggedIn && <Sidebar key={isLoggedIn} />}
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />~
-          <Route path="/OverviewPage" element={<Overview />} />
-          <Route path="/MembershipPage" element={<MembershipPlans />} />
-          <Route path="/ConsultationPage" element={<Consultation />} />
-          <Route path="/training" element={<Training />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/login"
-            element={<Login setIsLoggedIn={setIsLoggedIn} />}
-          />
-          <Route path="/gym" element={<Gym />} />
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+    <UserProvider>
+      <Router>
+        <div>
+          <Sidebar />
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />~
+            <Route path="/OverviewPage" element={<Overview />} />
+            <Route path="/MembershipPage" element={<MembershipPlans />} />
+            <Route path="/ConsultationPage" element={<Consultation />} />
+            <Route path="/training" element={<Training />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/gym" element={<Gym />} />
+          </Routes>
+          <Footer />
+        </div>
+      </Router>
+    </UserProvider>
   )
 }
 

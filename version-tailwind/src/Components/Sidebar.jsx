@@ -1,14 +1,46 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useUserContext } from './UserContext'
 
 function Sidebar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const navigate = useNavigate()
+  const { userData, updateUser } = useUserContext()
+  
+  const areObjectsEqual = (obj1, obj2) => {
+    return JSON.stringify(obj1) === JSON.stringify(obj2)
+  }
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    setIsLoggedIn(token !== null)
-  }, [isLoggedIn])
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem('token')
+
+        if (token) {
+          const response = await fetch('http://localhost:3001/user-info', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: token,
+            },
+          })
+
+          if (response.ok) {
+            const data = await response.json()
+            if (!areObjectsEqual(userData, data)) {
+              // Update the user data in the context only if it has changed
+              updateUser(data)
+            }
+          } else {
+            console.error('Failed to fetch user information')
+          }
+        }
+      } catch (error) {
+        console.error('Error during user information fetch:', error)
+      }
+    }
+
+    fetchUserInfo()
+  }, [updateUser, userData])
 
   const sidebarLinks = [
     { to: '/OverviewPage', text: 'Overview' },
@@ -26,14 +58,6 @@ function Sidebar() {
     SettingsPage: './images/settings.png',
   }
 
-  const personName = [{ name: 'Jedd Juab' }]
-
-  const accountType = [
-    { type: 'non-member' },
-    { type: 'Basic' },
-    { type: 'Elite' },
-  ]
-
   const handleLogout = async () => {
     try {
       const response = await fetch('http://localhost:3001/logout', {
@@ -41,22 +65,23 @@ function Sidebar() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
       })
 
       if (response.ok) {
-        console.log('Logout successful!')
+        console.log('Logout successful')
         localStorage.removeItem('token')
-        setIsLoggedIn(false)
+        updateUser({}) // Clear the user data in the context
+        navigate('/login')
+        console.log()
+        console.log()
       } else {
+        // Logout failed
         console.error('Logout failed')
       }
     } catch (error) {
-      console.error('Logout error:', error)
+      console.error('Error during logout:', error)
     }
-  }
-
-  if (!isLoggedIn) {
-    return null // or return some other component or null
   }
 
   return (
@@ -68,8 +93,8 @@ function Sidebar() {
             alt="profile pic"
             className="ml-14 w-24"
           />
-          <h2 className="mt-8">{personName[0].name}</h2>
-          <h2>{accountType[0].type}</h2>
+          {userData.name && <h2 className="mt-8">{userData.name}</h2>}
+          {userData.role && <h2>{userData.role}</h2>}
         </div>
         <ul>
           {sidebarLinks.map((link, index) => (

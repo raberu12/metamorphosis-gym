@@ -180,7 +180,6 @@ function Register() {
                 >
                   REGISTER
                 </button>
-                Or
                 <button
                   className="mb-12 ml-10 h-12 w-24 transform rounded-md bg-zinc-900 transition-transform duration-300 hover:scale-110 hover:bg-neutral-700"
                   type="button"
