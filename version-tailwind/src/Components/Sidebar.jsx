@@ -1,8 +1,11 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
 
     function Sidebar() {
+        const navigate = useNavigate();
+        const [personName, setpersonName] = useState(null);
+
 
         const sidebarLinks = [
             {to: '/OverviewPage', text: 'Overview'},
@@ -20,9 +23,7 @@ import { Link } from 'react-router-dom'
             SettingsPage: './images/settings.png'
         }
 
-        const personName = [
-            {name: 'Jedd Juab'},
-        ]
+        
 
         const accountType = [
             {type: 'non-member'},
@@ -34,18 +35,21 @@ import { Link } from 'react-router-dom'
 
 
         return(
-                <div className='bg-dark-elixir h-full mx-auto w-52 fixed text-white '>
+                <div className='bg-dark-elixir h-full mx-auto w-52 fixed text-white z-50 '>
                     <div className='text-center flex flex-col'>
                         <div className='mb-20 mt-8'>
                                 <img src='./images/icon.png' alt= 'profile pic' className='ml-14 w-24'/>
-                                <h2 className='mt-8'>{personName[0].name}</h2>
-                                <h2>{accountType[0].type}</h2>
+                                <h2 className='mt-8'>name</h2>
+                                <h2>member-type</h2>
                         </div>
                         <ul>
                             {sidebarLinks.map((link, index) => (
                                 <li
                                     key={index}
                                     className='hover:bg-sidebar cursor-pointer flex items-center'
+                                    onClick={() => {
+                                        navigate(link.to);
+                                      }}
                                 >
                                     <img
                                         src={sidebarIcon[link.to.replace('/', '')]}

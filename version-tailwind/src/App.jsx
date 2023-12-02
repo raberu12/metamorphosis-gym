@@ -13,7 +13,7 @@ import Overview from './Pages/Overview'
 import Training from './Pages/Training'
 import Blog from './Pages/Blog'
 import Login from './Pages/Login'
-
+import OverviewM from './Pages/OverviewM'
 
 const Home = () => {
   return (
@@ -46,7 +46,7 @@ const Home = () => {
           </p>
           <div className="grid grid-cols-1 gap-4 p-1 text-center sm:grid-cols-2 lg:grid-cols-4">
             <div className="flex flex-col items-center justify-center">
-              <img src="./images/support.png" alt="" className="w-32" />
+              <img src="./images/Support-pic.png" alt="" className="w-32" />
               <h1 className="font-bold">Support</h1>
               <p className="h-40 overflow-hidden">
                 When you join, you will receive a free personalized fitness
@@ -55,7 +55,7 @@ const Home = () => {
               </p>
             </div>
             <div className="flex flex-col items-center justify-center">
-              <img src="./images/equipment.png" alt="" className="w-32" />
+              <img src="./images/Equipment-pic.png" alt="" className="w-32" />
               <h1 className="font-bold">Equipment</h1>
               <p className="h-40 overflow-hidden">
                 We've got you covered with personalized support in the gym and
@@ -63,7 +63,7 @@ const Home = () => {
               </p>
             </div>
             <div className="flex flex-col items-center justify-center">
-              <img src="./images/convenience.png" alt="" className="w-32" />
+              <img src="./images/Convenience-pic.png" alt="" className="w-32" />
               <h1 className="font-bold">Convenience</h1>
               <p className="h-40 overflow-hidden">
                 Our members have access to over 5,100 workout locations
@@ -71,7 +71,7 @@ const Home = () => {
               </p>
             </div>
             <div className="flex flex-col items-center justify-center">
-              <img src="./images/community.png" alt="" className="w-32" />
+              <img src="./images/Communit-pic.png" alt="" className="w-32" />
               <h1 className="font-bold">Community</h1>
               <p className="h-40 overflow-hidden">
                 Enrolling in an MG gym membership means joining a supportive
@@ -94,7 +94,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />}/>~
-          <Route path="/OverviewPage" element={<Overview />}/>
+          <Route path="/OverviewPage" element={<OverviewM />}/>
           <Route path="/MembershipPage" element={<MembershipPlans />}/>
           <Route path="/ConsultationPage" element={<Consultation/>}/>
           <Route path="/training" element={<Training />} />

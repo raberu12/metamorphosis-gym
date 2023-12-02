@@ -9,7 +9,8 @@ export default {
         'dark-elixir' : '#302f4d',
         'navbar':'#1C1E18',
         'sidebar': '#635E7E',
-        'orangish': '#C84630'
+        'orangish': '#C84630',
+        'thead' : '#635E7E'
       }
     },
   },

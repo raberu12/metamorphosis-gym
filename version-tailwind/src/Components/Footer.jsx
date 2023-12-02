@@ -46,6 +46,7 @@ const Footer = () => {
           </div>
         </a>
       </div>
+      <p className='text-black text-xl text-center mt-2 p-4'>© Metamorphosis Gym, LLC 2023. All rights reserved</p>
     </footer>
   )
 }
