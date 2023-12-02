@@ -5,7 +5,7 @@ import { useUserContext } from './UserContext'
 function Sidebar() {
   const navigate = useNavigate()
   const { userData, updateUser } = useUserContext()
-  
+
   const areObjectsEqual = (obj1, obj2) => {
     return JSON.stringify(obj1) === JSON.stringify(obj2)
   }
@@ -82,6 +82,11 @@ function Sidebar() {
     } catch (error) {
       console.error('Error during logout:', error)
     }
+  }
+
+  if (!userData || !userData.name) {
+    // User is not logged in, don't render the sidebar
+    return null
   }
 
   return (
