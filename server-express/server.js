@@ -197,6 +197,75 @@ app.post("/logout", (req, res) => {
   }
 });
 
+app.get("/workout/:category", (req, res) => {
+  const category = req.params.category;
+  console.log("Fetching workout options for category:", category);
+
+  // Query the database for workout data based on the selected category
+  db.query(
+    "SELECT * FROM workout WHERE category = ?",
+    [category],
+    (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Internal server error." });
+      }
+
+      const workoutData = results.map((row) => ({
+        name: row.exercise_name,
+        sets: row.sets,
+        reps: row.reps,
+        intensity: row.intensity, // Corrected field name
+        status: row.status,
+      }));
+
+      res.status(200).json(workoutData);
+    }
+  );
+});
+
+app.get("/categories", (req, res) => {
+  db.query(
+    "SELECT DISTINCT category FROM workout",
+    (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Internal server error." });
+      }
+
+      const categories = results.map((row) => row.category);
+      res.status(200).json({ categories });
+    }
+  );
+});
+
+app.get("/exercises/:category", (req, res) => {
+  const category = req.params.category;
+  console.log("Fetching exercises for category:", category);
+
+  // Query the database for exercises based on the selected category
+  db.query(
+    "SELECT * FROM workout WHERE category = ?",
+    [category],
+    (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Internal server error." });
+      }
+
+      const exercises = results.map((row) => ({
+        name: row.exercise_name,
+        sets: row.sets,
+        reps: row.reps,
+        intensity: row.intensity,
+      }));
+
+      res.status(200).json({ category, exercises });
+    }
+  );
+});
+
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

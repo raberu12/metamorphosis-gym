@@ -14,6 +14,9 @@ import Training from './Pages/Training'
 import Blog from './Pages/Blog'
 import Login from './Pages/Login'
 import { UserProvider } from './Components/UserContext'
+import OverviewM from './Pages/OverviewM'
+
+
 
 const Home = () => {
   return (
@@ -104,6 +107,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/gym" element={<Gym />} />
           </Routes>
+          {/* <OverviewM/> */}
           <Footer />
         </div>
       </Router>
