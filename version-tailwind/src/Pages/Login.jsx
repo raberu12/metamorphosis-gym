@@ -18,6 +18,13 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
+      // Check if the entered credentials are for the admin
+    if (username === 'admin' && password === 'password') {
+      // If admin credentials match, redirect to Admin page
+      navigate('/admin');
+      return;
+    }
+      // If not admin credentials, proceed with the regular login logic
       const response = await fetch('http://localhost:3001/login', {
         method: 'POST',
         headers: {
