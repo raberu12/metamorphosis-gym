@@ -15,8 +15,7 @@ import Blog from './Pages/Blog'
 import Login from './Pages/Login'
 import { UserProvider } from './Components/UserContext'
 import OverviewM from './Pages/OverviewM'
-
-
+import Admin from './Pages/Admin'
 
 const Home = () => {
   return (
@@ -106,8 +105,9 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/gym" element={<Gym />} />
+            <Route path="/overviewmember" element={<OverviewM />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
-          {/* <OverviewM/> */}
           <Footer />
         </div>
       </Router>

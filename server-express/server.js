@@ -180,7 +180,6 @@ app.post("/login", (req, res) => {
   );
 });
 
-
 // Endpoint to fetch employee data
 app.get("/api/employees", (req, res) => {
   // Retrieve employee data from the database
@@ -200,20 +199,24 @@ app.delete("/api/employees/:id", (req, res) => {
   const employeeId = req.params.id;
 
   // Perform the deletion from the database
-  db.query("DELETE FROM employees WHERE id = ?", [employeeId], (err, results) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ message: "Internal server error." });
-    }
+  db.query(
+    "DELETE FROM employees WHERE id = ?",
+    [employeeId],
+    (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Internal server error." });
+      }
 
-    if (results.affectedRows === 0) {
-      // No employee with the specified ID found
-      return res.status(404).json({ message: "Employee not found." });
-    }
+      if (results.affectedRows === 0) {
+        // No employee with the specified ID found
+        return res.status(404).json({ message: "Employee not found." });
+      }
 
-    // Employee deleted successfully
-    res.status(200).json({ message: "Employee deleted successfully" });
-  });
+      // Employee deleted successfully
+      res.status(200).json({ message: "Employee deleted successfully" });
+    }
+  );
 });
 
 // Endpoint to update an employee
@@ -294,33 +297,45 @@ app.post("/api/employees", (req, res) => {
 // Endpoint to get the total current employees
 app.get("/api/totalCurrentEmployees", (req, res) => {
   // Retrieve the total current employees from the database
-  db.query("SELECT COUNT(*) AS totalCurrentEmployees FROM employees", (err, results) => {
-    if (err) {
-      console.error("Database error while fetching total current employees:", err);
-      return res.status(500).json({ error: "Internal server error." });
+  db.query(
+    "SELECT COUNT(*) AS totalCurrentEmployees FROM employees",
+    (err, results) => {
+      if (err) {
+        console.error(
+          "Database error while fetching total current employees:",
+          err
+        );
+        return res.status(500).json({ error: "Internal server error." });
+      }
+
+      const totalCurrentEmployees = results[0].totalCurrentEmployees;
+
+      // Send the total current employees count in the response
+      res.status(200).json({ totalCurrentEmployees });
     }
-
-    const totalCurrentEmployees = results[0].totalCurrentEmployees;
-
-    // Send the total current employees count in the response
-    res.status(200).json({ totalCurrentEmployees });
-  });
+  );
 });
 
 // Endpoint to get the total current members
 app.get("/api/totalCurrentMembers", (req, res) => {
   // Retrieve the total current members from the database
-  db.query("SELECT COUNT(*) AS totalCurrentMembers FROM members", (err, results) => {
-    if (err) {
-      console.error("Database error while fetching total current members:", err);
-      return res.status(500).json({ error: "Internal server error." });
+  db.query(
+    "SELECT COUNT(*) AS totalCurrentMembers FROM members",
+    (err, results) => {
+      if (err) {
+        console.error(
+          "Database error while fetching total current members:",
+          err
+        );
+        return res.status(500).json({ error: "Internal server error." });
+      }
+
+      const totalCurrentMembers = results[0].totalCurrentMembers;
+
+      // Send the total current members count in the response
+      res.status(200).json({ totalCurrentMembers });
     }
-
-    const totalCurrentMembers = results[0].totalCurrentMembers;
-
-    // Send the total current members count in the response
-    res.status(200).json({ totalCurrentMembers });
-  });
+  );
 });
 
 // Endpoint to fetch member data
@@ -336,7 +351,6 @@ app.get("/api/members", (req, res) => {
     res.status(200).json(results);
   });
 });
-
 
 // Endpoint to delete a member
 app.delete("/api/members/:id", (req, res) => {
@@ -432,6 +446,7 @@ app.post("/api/members", (req, res) => {
       );
     }
   );
+});
 
 //logout endpoint
 app.post("/logout", (req, res) => {
@@ -478,18 +493,15 @@ app.get("/workout/:category", (req, res) => {
 });
 
 app.get("/categories", (req, res) => {
-  db.query(
-    "SELECT DISTINCT category FROM workout",
-    (err, results) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.status(500).json({ message: "Internal server error." });
-      }
-
-      const categories = results.map((row) => row.category);
-      res.status(200).json({ categories });
+  db.query("SELECT DISTINCT category FROM workout", (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ message: "Internal server error." });
     }
-  );
+
+    const categories = results.map((row) => row.category);
+    res.status(200).json({ categories });
+  });
 });
 
 app.get("/exercises/:category", (req, res) => {
@@ -517,7 +529,6 @@ app.get("/exercises/:category", (req, res) => {
     }
   );
 });
-
 
 // Start the server
 app.listen(port, () => {
