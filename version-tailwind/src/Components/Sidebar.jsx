@@ -5,6 +5,7 @@ import { useUserContext } from './UserContext'
 function Sidebar() {
   const navigate = useNavigate()
   const { userData, updateUser } = useUserContext()
+  const [isHovered, setIsHovered] = useState(false)
 
   const areObjectsEqual = (obj1, obj2) => {
     return JSON.stringify(obj1) === JSON.stringify(obj2)
@@ -90,7 +91,13 @@ function Sidebar() {
   }
 
   return (
-    <div className="fixed mx-auto h-full w-52 bg-dark-elixir text-white ">
+    <div
+      className={`fixed mx-auto h-full w-52 bg-dark-elixir text-white transition-opacity duration-700 ${
+        isHovered ? 'opacity-100' : 'opacity-0'
+      }`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div className="flex flex-col text-center">
         <div className="mb-20 mt-8">
           <img
