@@ -8,6 +8,7 @@ import {
 } from 'react-icons/ai'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUserContext } from '../Components/UserContext'
+import { jwtDecode } from 'jwt-decode'
 
 const Login = () => {
   const [username, setUsername] = useState('')
@@ -16,15 +17,12 @@ const Login = () => {
   const navigate = useNavigate()
   const { updateUser } = useUserContext()
 
+  // Assuming this is in the component where the login logic is implemented
+
   const handleLogin = async () => {
+    let token // Declare token here
+
     try {
-      // Check if the entered credentials are for the admin
-    if (username === 'admin' && password === 'password') {
-      // If admin credentials match, redirect to Admin page
-      navigate('/admin');
-      return;
-    }
-      // If not admin credentials, proceed with the regular login logic
       const response = await fetch('http://localhost:3001/login', {
         method: 'POST',
         headers: {
@@ -34,14 +32,35 @@ const Login = () => {
       })
 
       const data = await response.json()
+      console.log('Login Response:', data)
 
       if (response.ok) {
         console.log('Login successful:', data)
 
         // Store the token in localStorage
-        localStorage.setItem('token', data.token)
-        updateUser(data) // Update the user data in the context
-        navigate('/')
+        token = data.token
+        localStorage.setItem('token', token)
+
+        // Decode the token to access user information
+        const decodedToken = jwtDecode(token)
+
+        // Assuming you have a function to update the user data context
+        updateUser({
+          id: decodedToken.id,
+          role: decodedToken.role,
+          membership: decodedToken.membership,
+        })
+
+        console.log('User Data:', decodedToken)
+
+        // Check the role in the response and redirect accordingly
+        console.log('User Role:', decodedToken.role)
+
+        if (decodedToken.role === 'admin') {
+          navigate('/admin')
+        } else {
+          navigate('/')
+        }
       } else {
         console.error('Login failed:', data.message)
       }

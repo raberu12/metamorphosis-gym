@@ -72,9 +72,9 @@ app.get("/user-info", verifyToken, (req, res) => {
 
   // Fetch user information from the database
   const userInfo = {
+    id: req.user.id,
     name: req.user.username,
     role: req.user.role,
-    id: req.user.id
     // Other user-related data
   };
 
@@ -172,10 +172,11 @@ app.post("/login", (req, res) => {
 
       // Generate a token and include the role in the payload
       const token = jwt.sign(
-        { username, role: results[0].role, id: results[0].id}, // Include role in the payload
+        { id: results[0].id, username, role: results[0].role },
         secretKey,
         { expiresIn: "1h" }
       );
+
       res.status(200).json({ message: "Login successful.", token });
     }
   );
@@ -531,7 +532,6 @@ app.get("/exercises/:category", (req, res) => {
   );
 });
 
-
 // subscription endpoint
 app.post("/api/subscribe", (req, res) => {
   const { id, membership } = req.body;
@@ -543,7 +543,9 @@ app.post("/api/subscribe", (req, res) => {
     (err, result) => {
       if (err) {
         console.error("Database error:", err);
-        return res.status(500).json({ message: "Failed to update subscription" });
+        return res
+          .status(500)
+          .json({ message: "Failed to update subscription" });
       }
 
       // Commit the changes after updating the subscription
@@ -553,7 +555,9 @@ app.post("/api/subscribe", (req, res) => {
           return res.status(500).json({ message: "Failed to commit changes" });
         }
 
-        return res.status(200).json({ message: "Subscription updated successfully" });
+        return res
+          .status(200)
+          .json({ message: "Subscription updated successfully" });
       });
     }
   );
