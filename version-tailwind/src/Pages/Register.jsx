@@ -1,206 +1,209 @@
 import React, { useState } from 'react'
-import {
-  BsEnvelope,
-  BsPerson,
-  BsFillEyeFill,
-  BsFillEyeSlashFill,
-} from 'react-icons/bs'
-import { FaLock } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 
-function Register() {
+const Register = () => {
   const navigate = useNavigate()
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [isRegistered, setIsRegistered] = useState(false)
-  const [resetFields, setResetFields] = useState(false)
-  const [emailError, setEmailError] = useState('')
-  const [passwordMatchError, setPasswordMatchError] = useState('')
+  const [formData, setFormData] = useState({
+    firstname: '',
+    lastname: '',
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  })
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword)
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData({
+      ...formData,
+      [name]: value,
+    })
   }
 
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(
-      (prevShowConfirmPassword) => !prevShowConfirmPassword,
-    )
-  }
-  const handleRegister = async () => {
-    try {
-      // Reset errors on each registration attempt
-      setEmailError('')
-      setPasswordMatchError('')
-
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(email)) {
-        setEmailError('Invalid email format')
-        return
-      }
-
-      // Check if password and confirm password match
-      if (password !== confirmPassword) {
-        setPasswordMatchError("Passwords don't match")
-        return
-      }
-
-      const response = await fetch('http://localhost:3001/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password }),
+  const sendRegistrationData = (registrationData) => {
+    fetch('http://localhost:3001/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(registrationData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Registration failed')
+        }
+        return response.json()
       })
-
-      const data = await response.json()
-      console.log(data.message)
-
-      // Check if registration was successful
-      if (response.ok) {
-        setIsRegistered(true)
-        setResetFields(true)
+      .then((data) => {
+        alert('Registration successful')
         navigate('/login')
-      } else {
-        setIsRegistered(false)
-      }
-    } catch (error) {
-      console.error('Error during registration:', error)
-      setIsRegistered(false)
-    }
+      })
+      .catch((error) => {
+        alert('Registration failed. Please try again.')
+        console.error('Registration error:', error)
+      })
   }
 
-  const handleReset = () => {
-    setUsername('')
-    setEmail('')
-    setPassword('')
-    setConfirmPassword('')
-    setResetFields(false)
-    setIsRegistered(false)
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const { username, email, password, confirmPassword, firstname, lastname } =
+      formData
+    if (
+      !username ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !firstname ||
+      !lastname
+    ) {
+      alert('Please provide all required fields.')
+      return
+    }
+    if (password !== confirmPassword) {
+      alert('Password and Confirm Password do not match.')
+      return
+    }
+    const registrationData = {
+      username,
+      email,
+      password,
+      firstname,
+      lastname,
+    }
+    sendRegistrationData(registrationData)
   }
 
   return (
-    <>
-      <div className="m-20 flex h-screen flex-col items-center">
-        <h1 className="mt-18 text-center text-7xl font-extrabold">
-          WELCOME TO METAMORPHOSIS GYM
-        </h1>
-        <div className="mt-20 flex h-auto w-1/3 flex-col rounded-md bg-zinc-800 text-center ">
-          <div className="mt-3 text-xl font-semibold text-white">
-            <h2 className="mb-10 mt-10 text-5xl font-bold italic">REGISTER</h2>
-
-            <div>
-              USERNAME
-              <BsPerson className="absolute h-8 w-28 ml-2 mt-1 text-black" />
-              <input
-                className="mb-10 w-10/12 rounded-md p-1 text-center text-black"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <div>EMAIL</div>
-              <BsEnvelope className="absolute h-8 w-28 p-1 ml-2 mt-1 text-black" />
-              <input
-                className="mb-10 w-10/12 rounded-md p-1 text-center text-black"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            <div>
-              PASSWORD
-              <FaLock className="absolute h-8 w-28 p-1 ml-2 mt-1 text-black" />
-              <div>
-                <input
-                  className="mb-10 w-10/12 rounded-md p-1 text-center text-black"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                {showPassword ? (
-                  <BsFillEyeSlashFill
-                    onClick={togglePasswordVisibility}
-                    className="absolute ml-2 inline-block h-8 shrink-0 cursor-pointer text-white"
-                  />
-                ) : (
-                  <BsFillEyeFill
-                    onClick={togglePasswordVisibility}
-                    className="absolute ml-2 inline-block h-8 shrink-0 cursor-pointer text-white"
-                  />
-                )}
-              </div>
-            </div>
-
-            <div>
-              CONFIRM PASSWORD
-              <FaLock className="absolute h-8 w-28 p-1 ml-2 mt-1 text-black" />
-              <div>
-                <input
-                  className="w-10/12 rounded-md p-1 text-center text-black"
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-                {showConfirmPassword ? (
-                  <BsFillEyeSlashFill
-                    onClick={toggleConfirmPasswordVisibility}
-                    className="absolute ml-2 inline-block h-8 shrink-0 cursor-pointer text-white"
-                  />
-                ) : (
-                  <BsFillEyeFill
-                    onClick={toggleConfirmPasswordVisibility}
-                    className="absolute ml-2 inline-block h-8 shrink-0 cursor-pointer text-white"
-                  />
-                )}
-              </div>
-            </div>
-
-            <div className="mt-2 font-semibold text-red-500">
-              {emailError && <div>{emailError}</div>}
-              {passwordMatchError && <div>{passwordMatchError}</div>}
-            </div>
-
-            <div className="mt-14 grid grid-rows-2 items-center justify-center text-center text-sm">
-              <div className="h-10 w-96 font-semibold">
-                <button
-                  className="mr-10 h-12 w-24 transform rounded-md bg-zinc-900 transition-transform duration-300 hover:scale-110 hover:bg-neutral-700"
-                  type="button"
-                  onClick={() => {
-                    handleRegister()
-                    handleReset()
-                  }}
-                >
-                  REGISTER
-                </button>
-                <button
-                  className="mb-12 ml-10 h-12 w-24 transform rounded-md bg-zinc-900 transition-transform duration-300 hover:scale-110 hover:bg-neutral-700"
-                  type="button"
-                  onClick={() => {
-                    // Navigate to login page on button click
-                    navigate('/login')
-                  }}
-                >
-                  LOGIN
-                </button>
-              </div>
-            </div>
-            {isRegistered && (
-              <div className="mt-4 font-semibold text-green-500">
-                Successfully registered! You can now log in.
-              </div>
-            )}
-          </div>
+    <div className="flex h-screen items-center justify-center">
+      <form
+        className="h-5/7 mb-4 flex w-1/3 flex-col rounded bg-zinc-800 px-8 pb-8 pt-8 shadow-md"
+        onSubmit={handleSubmit}
+      >
+        <div className="mb-4">
+          <label
+            className="mb-2 block text-center text-4xl font-bold italic text-white"
+            htmlFor="username"
+          >
+            USERNAME
+          </label>
+          <input
+            className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+            id="username"
+            type="text"
+            placeholder="Enter your username"
+            name="username"
+            value={formData.username}
+            onChange={handleInputChange}
+            required
+          />
         </div>
-      </div>
-    </>
+        <div className="mb-6">
+          <label
+            className="mb-2 block text-center text-4xl font-bold italic text-white"
+            htmlFor="firstname"
+          >
+            FIRST NAME
+          </label>
+          <input
+            className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+            id="firstname"
+            type="firstname"
+            placeholder="Enter your first name"
+            name="firstname"
+            value={formData.firstname}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="mb-6">
+          <label
+            className="mb-2 block text-center text-4xl font-bold italic text-white"
+            htmlFor="lastname"
+          >
+            LAST NAME
+          </label>
+          <input
+            className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+            id="lastname"
+            type="lastname"
+            placeholder="Enter your last name"
+            name="lastname"
+            value={formData.lastname}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            className="mb-2 block text-center text-4xl font-bold italic text-white"
+            htmlFor="email"
+          >
+            EMAIL
+          </label>
+          <input
+            className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+            id="email"
+            type="email"
+            placeholder="Enter your email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="mb-6">
+          <label
+            className="m-2 block text-center text-4xl font-bold italic text-white"
+            htmlFor="password"
+          >
+            PASSWORD
+          </label>
+          <input
+            className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+            id="password"
+            type="password"
+            placeholder="Enter your password"
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="mb-6">
+          <label
+            className="m-2 block text-center text-4xl font-bold italic text-white"
+            htmlFor="confirmPassword"
+          >
+            CONFIRM PASSWORD
+          </label>
+          <input
+            className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+            id="confirmPassword"
+            type="password"
+            placeholder="Confirm your password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+
+        <div className="m-auto flex justify-center gap-3">
+          <button
+            className="focus:shadow-outline rounded bg-zinc-900 px-6 py-3 font-bold text-white transition duration-300 hover:scale-110 hover:bg-zinc-700"
+            type="submit"
+          >
+            Register
+          </button>
+          <button
+            className="focus:shadow-outline rounded bg-zinc-900 px-6 py-3 font-bold text-white transition duration-300 hover:scale-110 hover:bg-zinc-700"
+            onClick={() => navigate('/login')}
+          >
+            Login
+          </button>
+        </div>
+      </form>
+    </div>
   )
 }
 

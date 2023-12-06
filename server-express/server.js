@@ -74,7 +74,7 @@ app.get("/user-info", verifyToken, (req, res) => {
   const userInfo = {
     name: req.user.username,
     role: req.user.role,
-    id: req.user.id
+    id: req.user.id,
     // Other user-related data
   };
 
@@ -84,10 +84,10 @@ app.get("/user-info", verifyToken, (req, res) => {
 
 /// Register endpoint
 app.post("/register", (req, res) => {
-  const { username, email, password } = req.body;
+  const { firstname, lastname, username, email, password, role } = req.body;
 
   // Validate input
-  if (!username || !email || !password) {
+  if (!username || !email || !password || !firstname || !lastname || !role) {
     return res
       .status(400)
       .json({ message: "Please provide all required fields." });
@@ -115,15 +115,40 @@ app.post("/register", (req, res) => {
 
       // Store the user in the database with the hashed password
       db.query(
-        "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
-        [username, email, hashedPassword], // Use hashed password
-        (err) => {
+        "INSERT INTO users (username, email, password, firstname, lastname, role) VALUES (?, ?, ?, ?, ?, ?)",
+        [username, email, hashedPassword, firstname, lastname, role], // Use hashed password
+        (err, results) => {
           if (err) {
             console.error("Database error:", err);
             return res.status(500).json({ message: "Internal server error." });
           }
 
-          return res.status(200).json({ message: "Registration successful." });
+          // Check if the role is admin to insert into employees table
+          if (role === "admin") {
+            const userId = results.insertId; // Get the ID of the inserted user
+
+            // Insert into employees table with the user's ID
+            db.query(
+              "INSERT INTO employees (user_id, work_schedule) VALUES (?, ?)",
+              [userId, "No Work Schedule Yet"], // You can adjust the default work schedule
+              (err) => {
+                if (err) {
+                  console.error("Database error:", err);
+                  return res
+                    .status(500)
+                    .json({ message: "Internal server error." });
+                }
+
+                return res
+                  .status(200)
+                  .json({ message: "Registration successful." });
+              }
+            );
+          } else {
+            return res
+              .status(200)
+              .json({ message: "Registration successful." });
+          }
         }
       );
     }
@@ -172,279 +197,11 @@ app.post("/login", (req, res) => {
 
       // Generate a token and include the role in the payload
       const token = jwt.sign(
-        { username, role: results[0].role, id: results[0].id}, // Include role in the payload
+        { username, role: results[0].role, id: results[0].id }, // Include role in the payload
         secretKey,
         { expiresIn: "1h" }
       );
       res.status(200).json({ message: "Login successful.", token });
-    }
-  );
-});
-
-// Endpoint to fetch employee data
-app.get("/api/employees", (req, res) => {
-  // Retrieve employee data from the database
-  db.query("SELECT * FROM employees", (err, results) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ message: "Internal server error." });
-    }
-
-    // Send the retrieved employee data in the response
-    res.status(200).json(results);
-  });
-});
-
-// Endpoint to delete an employee
-app.delete("/api/employees/:id", (req, res) => {
-  const employeeId = req.params.id;
-
-  // Perform the deletion from the database
-  db.query(
-    "DELETE FROM employees WHERE id = ?",
-    [employeeId],
-    (err, results) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.status(500).json({ message: "Internal server error." });
-      }
-
-      if (results.affectedRows === 0) {
-        // No employee with the specified ID found
-        return res.status(404).json({ message: "Employee not found." });
-      }
-
-      // Employee deleted successfully
-      res.status(200).json({ message: "Employee deleted successfully" });
-    }
-  );
-});
-
-// Endpoint to update an employee
-app.put("/api/employees/:id", (req, res) => {
-  const employeeId = req.params.id;
-  const { fullName, position, phoneNumber, workSchedule } = req.body;
-
-  // Validate input
-  if (!fullName || !position || !phoneNumber || !workSchedule) {
-    return res
-      .status(400)
-      .json({ message: "Please provide all required fields." });
-  }
-
-  // Update the employee in the database
-  db.query(
-    "UPDATE employees SET fullName = ?, position = ?, phoneNumber = ?, workSchedule = ? WHERE id = ?",
-    [fullName, position, phoneNumber, workSchedule, employeeId],
-    (err, results) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.status(500).json({ message: "Internal server error." });
-      }
-
-      if (results.affectedRows === 0) {
-        // No employee with the specified ID found
-        return res.status(404).json({ message: "Employee not found." });
-      }
-
-      // Employee updated successfully
-      res.status(200).json({ message: "Employee updated successfully" });
-    }
-  );
-});
-
-// Endpoint to create a new employee
-app.post("/api/employees", (req, res) => {
-  const { fullName, position, phoneNumber, workSchedule } = req.body;
-
-  // Validate input
-  if (!fullName || !position || !phoneNumber || !workSchedule) {
-    return res
-      .status(400)
-      .json({ message: "Please provide all required fields." });
-  }
-
-  // Perform the insertion into the database
-  db.query(
-    "INSERT INTO employees (fullName, position, phoneNumber, workSchedule) VALUES (?, ?, ?, ?)",
-    [fullName, position, phoneNumber, workSchedule],
-    (err, results) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.status(500).json({ message: "Internal server error." });
-      }
-
-      // Get the ID of the newly added employee
-      const newEmployeeId = results.insertId;
-
-      // Retrieve the complete data of the added employee
-      db.query(
-        "SELECT * FROM employees WHERE id = ?",
-        [newEmployeeId],
-        (err, employeeData) => {
-          if (err) {
-            console.error("Database error:", err);
-            return res.status(500).json({ message: "Internal server error." });
-          }
-
-          // Send the complete data of the added employee in the response
-          res.status(201).json(employeeData[0]);
-        }
-      );
-    }
-  );
-});
-
-// Endpoint to get the total current employees
-app.get("/api/totalCurrentEmployees", (req, res) => {
-  // Retrieve the total current employees from the database
-  db.query(
-    "SELECT COUNT(*) AS totalCurrentEmployees FROM employees",
-    (err, results) => {
-      if (err) {
-        console.error(
-          "Database error while fetching total current employees:",
-          err
-        );
-        return res.status(500).json({ error: "Internal server error." });
-      }
-
-      const totalCurrentEmployees = results[0].totalCurrentEmployees;
-
-      // Send the total current employees count in the response
-      res.status(200).json({ totalCurrentEmployees });
-    }
-  );
-});
-
-// Endpoint to get the total current members
-app.get("/api/totalCurrentMembers", (req, res) => {
-  // Retrieve the total current members from the database
-  db.query(
-    "SELECT COUNT(*) AS totalCurrentMembers FROM members",
-    (err, results) => {
-      if (err) {
-        console.error(
-          "Database error while fetching total current members:",
-          err
-        );
-        return res.status(500).json({ error: "Internal server error." });
-      }
-
-      const totalCurrentMembers = results[0].totalCurrentMembers;
-
-      // Send the total current members count in the response
-      res.status(200).json({ totalCurrentMembers });
-    }
-  );
-});
-
-// Endpoint to fetch member data
-app.get("/api/members", (req, res) => {
-  // Retrieve member data from the database
-  db.query("SELECT * FROM members", (err, results) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ message: "Internal server error." });
-    }
-
-    // Send the retrieved member data in the response
-    res.status(200).json(results);
-  });
-});
-
-// Endpoint to delete a member
-app.delete("/api/members/:id", (req, res) => {
-  const memberId = req.params.id;
-
-  // Perform the deletion from the database
-  db.query("DELETE FROM members WHERE id = ?", [memberId], (err, results) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ message: "Internal server error." });
-    }
-
-    if (results.affectedRows === 0) {
-      // No member with the specified ID found
-      return res.status(404).json({ message: "Member not found." });
-    }
-
-    // Member deleted successfully
-    res.status(200).json({ message: "Member deleted successfully" });
-  });
-});
-
-// Endpoint to update a member
-app.put("/api/members/:id", (req, res) => {
-  const memberId = req.params.id;
-  const { username, email, role, membership } = req.body;
-
-  // Validate input
-  if (!username || !email || !role || !membership) {
-    return res
-      .status(400)
-      .json({ message: "Please provide all required fields." });
-  }
-
-  // Update the member in the database
-  db.query(
-    "UPDATE members SET username = ?, email = ?, role = ?, membership = ? WHERE id = ?",
-    [username, email, role, membership, memberId],
-    (err, results) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.status(500).json({ message: "Internal server error." });
-      }
-
-      if (results.affectedRows === 0) {
-        // No member with the specified ID found
-        return res.status(404).json({ message: "Member not found." });
-      }
-
-      // Member updated successfully
-      res.status(200).json({ message: "Member updated successfully" });
-    }
-  );
-});
-
-// Endpoint to create a new member
-app.post("/api/members", (req, res) => {
-  const { username, email, role, membership } = req.body;
-
-  // Validate input
-  if (!username || !email || !role || !membership) {
-    return res
-      .status(400)
-      .json({ message: "Please provide all required fields." });
-  }
-
-  // Perform the insertion into the database
-  db.query(
-    "INSERT INTO members (username, email, role, membership) VALUES (?, ?, ?, ?)",
-    [username, email, role, membership],
-    (err, results) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.status(500).json({ message: "Internal server error." });
-      }
-
-      // Get the ID of the newly added member
-      const newMemberId = results.insertId;
-
-      // Retrieve the complete data of the added member
-      db.query(
-        "SELECT * FROM members WHERE id = ?",
-        [newMemberId],
-        (err, memberData) => {
-          if (err) {
-            console.error("Database error:", err);
-            return res.status(500).json({ message: "Internal server error." });
-          }
-
-          // Send the complete data of the added member in the response
-          res.status(201).json(memberData[0]);
-        }
-      );
     }
   );
 });
@@ -532,7 +289,6 @@ app.get("/exercises/:category", (req, res) => {
   );
 });
 
-
 // subscription endpoint
 app.post("/api/subscribe", (req, res) => {
   const { id, membership } = req.body;
@@ -544,7 +300,9 @@ app.post("/api/subscribe", (req, res) => {
     (err, result) => {
       if (err) {
         console.error("Database error:", err);
-        return res.status(500).json({ message: "Failed to update subscription" });
+        return res
+          .status(500)
+          .json({ message: "Failed to update subscription" });
       }
 
       // Commit the changes after updating the subscription
@@ -554,13 +312,13 @@ app.post("/api/subscribe", (req, res) => {
           return res.status(500).json({ message: "Failed to commit changes" });
         }
 
-        return res.status(200).json({ message: "Subscription updated successfully" });
+        return res
+          .status(200)
+          .json({ message: "Subscription updated successfully" });
       });
     }
   );
 });
-
-
 
 app.post("/update-progress", verifyToken, (req, res) => {
   const { user_id, workout_id, status } = req.body;
@@ -577,26 +335,85 @@ app.post("/update-progress", verifyToken, (req, res) => {
       VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE status = VALUES(status);
     `;
 
-    db.query(updateQuery, [user_id, workout_id, status], (err, updateResults) => {
-      if (err) {
-        console.error("Database error (updateQuery):", err);
-        throw new Error("Internal server error.");
+    db.query(
+      updateQuery,
+      [user_id, workout_id, status],
+      (err, updateResults) => {
+        if (err) {
+          console.error("Database error (updateQuery):", err);
+          throw new Error("Internal server error.");
+        }
+
+        console.log("User progress updated:", updateResults);
+
+        // Optionally, return updated data in the response
+        res.status(200).json({
+          message: "User progress updated successfully",
+          updatedData: { user_id, workout_id, status },
+        });
       }
-
-      console.log("User progress updated:", updateResults);
-
-      // Optionally, return updated data in the response
-      res.status(200).json({
-        message: "User progress updated successfully",
-        updatedData: { user_id, workout_id, status },
-      });
-    });
+    );
   } catch (error) {
     console.error("Error updating progress:", error);
-    res.status(500).json({ message: error.message || "Internal server error." });
+    res
+      .status(500)
+      .json({ message: error.message || "Internal server error." });
   }
 });
 
+app.get("/get/employees", (req, res) => {
+  db.query(
+    "SELECT employees.*, users.firstname, users.lastname FROM employees JOIN users ON employees.user_id = users.id",
+    (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Internal server error." });
+      }
+      res.json(results);
+    }
+  );
+});
+
+// Express route to handle employee edits
+app.put("/edit/employee/:id", (req, res) => {
+  const employeeId = req.params.id;
+  const { newLastName, newFirstName, newWorkSchedule } = req.body;
+
+  // Validate input
+  if (!newLastName || !newFirstName || !newWorkSchedule) {
+    return res
+      .status(400)
+      .json({ message: "Please provide both name and work schedule." });
+  }
+
+  // Update the employees table
+  db.query(
+    "UPDATE employees SET work_schedule = ? WHERE employee_id = ?",
+    [newWorkSchedule, employeeId],
+    (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Internal server error." });
+      }
+
+      // Update the users table
+      db.query(
+        "UPDATE users SET lastname = ?, firstname = ? WHERE id = (SELECT user_id FROM employees WHERE employee_id = ?)",
+        [newLastName, newFirstName, employeeId],
+        (err, results) => {
+          if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ message: "Internal server error." });
+          }
+
+          return res
+            .status(200)
+            .json({ message: "Employee updated successfully." });
+        }
+      );
+    }
+  );
+});
 
 app.get("/user-id", verifyToken, (req, res) => {
   // Log the decoded user object
@@ -612,11 +429,6 @@ app.get("/user-id", verifyToken, (req, res) => {
   // Send the user information as a response
   res.json(userInfo);
 });
-
-
-
-
-
 
 // Start the server
 app.listen(port, () => {
