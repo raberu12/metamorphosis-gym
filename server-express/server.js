@@ -415,6 +415,43 @@ app.put("/edit/employee/:id", (req, res) => {
   );
 });
 
+app.delete("/delete/employee/:id", (req, res) => {
+  const employeeId = req.params.id;
+
+  // Validate input
+  if (!employeeId) {
+    return res.status(400).json({ message: "Please provide an employee ID." });
+  }
+
+  // Delete the employee from the employees table
+  db.query(
+    "DELETE FROM employees WHERE employee_id = ?",
+    [employeeId],
+    (err, results) => {
+      if (err) {
+        console.error("Error deleting from employees table:", err);
+        return res.status(500).json({ message: "Internal server error." });
+      }
+
+      // Delete the corresponding user from the users table
+      db.query(
+        "DELETE FROM users WHERE id = (SELECT user_id FROM employees WHERE employee_id = ?)",
+        [employeeId],
+        (err, results) => {
+          if (err) {
+            console.error("Error deleting from users table:", err);
+            return res.status(500).json({ message: "Internal server error." });
+          }
+
+          return res
+            .status(200)
+            .json({ message: "Employee deleted successfully." });
+        }
+      );
+    }
+  );
+});
+
 app.get("/user-id", verifyToken, (req, res) => {
   // Log the decoded user object
   console.log("Decoded user object:", req.user);

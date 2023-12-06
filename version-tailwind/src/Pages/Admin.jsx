@@ -17,20 +17,12 @@ const Admin = () => {
     fetch('http://localhost:3001/get/employees')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data received:', data)
         setEmployees(data)
       })
       .catch((error) => console.error('Error fetching employee data:', error))
   }, [employees])
 
-  console.log('Employees state:', employees)
-
   const handleSaveEmployee = (updatedEmployee) => {
-    const { id, newLastName, newFirstName, newWorkSchedule } = updatedEmployee
-    console.log('Updating employee with ID:', id)
-    console.log('New Last Name:', newLastName)
-    console.log('New First Name:', newFirstName)
-    console.log('New Work Schedule:', newWorkSchedule)
     fetch(`http://localhost:3001/edit/employee/${updatedEmployee.id}`, {
       method: 'PUT',
       headers: {
@@ -48,6 +40,34 @@ const Admin = () => {
         console.log('Employee updated successfully:', data)
       })
       .catch((error) => console.error('Error updating employee:', error))
+  }
+
+  const handleDeleteEmployee = (employeeId) => {
+    // Make a DELETE request to your server endpoint
+    fetch(`http://localhost:3001/delete/employee/${employeeId}`, {
+      method: 'DELETE',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.message)
+
+        // Log the current state for debugging
+        console.log('Current Employees State:', employees)
+
+        // Remove the deleted employee from the local state
+        setEmployees((prevEmployees) =>
+          prevEmployees.filter((employee) => {
+            const isMatching = employee.employee_id === employeeId
+
+            // Log the values for debugging
+            console.log('Employee ID:', employee.employee_id)
+            console.log('Is Matching?', isMatching)
+
+            return !isMatching
+          }),
+        )
+      })
+      .catch((error) => console.error('Error deleting employee:', error))
   }
 
   return (
@@ -85,7 +105,10 @@ const Admin = () => {
                   >
                     Edit
                   </button>
-                  <button className="ml-2 rounded bg-red-600 p-2 text-white hover:text-red-900">
+                  <button
+                    className="ml-2 rounded bg-red-600 p-2 text-white hover:text-red-900"
+                    onClick={() => handleDeleteEmployee(employee.employee_id)}
+                  >
                     Delete
                   </button>
                 </td>
