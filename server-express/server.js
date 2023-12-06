@@ -72,9 +72,9 @@ app.get("/user-info", verifyToken, (req, res) => {
 
   // Fetch user information from the database
   const userInfo = {
-    id: req.user.id,
     name: req.user.username,
     role: req.user.role,
+    id: req.user.id
     // Other user-related data
   };
 
@@ -172,11 +172,10 @@ app.post("/login", (req, res) => {
 
       // Generate a token and include the role in the payload
       const token = jwt.sign(
-        { id: results[0].id, username, role: results[0].role },
+        { username, role: results[0].role, id: results[0].id}, // Include role in the payload
         secretKey,
         { expiresIn: "1h" }
       );
-
       res.status(200).json({ message: "Login successful.", token });
     }
   );
@@ -522,6 +521,7 @@ app.get("/exercises/:category", (req, res) => {
 
       const exercises = results.map((row) => ({
         name: row.exercise_name,
+        id: row.workout_id,
         sets: row.sets,
         reps: row.reps,
         intensity: row.intensity,
@@ -531,6 +531,7 @@ app.get("/exercises/:category", (req, res) => {
     }
   );
 });
+
 
 // subscription endpoint
 app.post("/api/subscribe", (req, res) => {
@@ -543,9 +544,7 @@ app.post("/api/subscribe", (req, res) => {
     (err, result) => {
       if (err) {
         console.error("Database error:", err);
-        return res
-          .status(500)
-          .json({ message: "Failed to update subscription" });
+        return res.status(500).json({ message: "Failed to update subscription" });
       }
 
       // Commit the changes after updating the subscription
@@ -555,13 +554,49 @@ app.post("/api/subscribe", (req, res) => {
           return res.status(500).json({ message: "Failed to commit changes" });
         }
 
-        return res
-          .status(200)
-          .json({ message: "Subscription updated successfully" });
+        return res.status(200).json({ message: "Subscription updated successfully" });
       });
     }
   );
 });
+
+
+
+app.post("/update-progress", verifyToken, (req, res) => {
+  const { user_id, workout_id, status } = req.body;
+
+  try {
+    // Validate input
+    if (!user_id || !workout_id || !status) {
+      throw new Error("Please provide all required fields.");
+    }
+
+    // Update user progress status in the 'user_progress' table
+    const updateQuery = `
+      INSERT INTO user_progress (user_id, workout_id, status)
+      VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE status = VALUES(status);
+    `;
+
+    db.query(updateQuery, [user_id, workout_id, status], (err, updateResults) => {
+      if (err) {
+        console.error("Database error (updateQuery):", err);
+        throw new Error("Internal server error.");
+      }
+
+      console.log("User progress updated:", updateResults);
+
+      // Optionally, return updated data in the response
+      res.status(200).json({
+        message: "User progress updated successfully",
+        updatedData: { user_id, workout_id, status },
+      });
+    });
+  } catch (error) {
+    console.error("Error updating progress:", error);
+    res.status(500).json({ message: error.message || "Internal server error." });
+  }
+});
+
 
 app.get("/user-id", verifyToken, (req, res) => {
   // Log the decoded user object
@@ -577,6 +612,11 @@ app.get("/user-id", verifyToken, (req, res) => {
   // Send the user information as a response
   res.json(userInfo);
 });
+
+
+
+
+
 
 // Start the server
 app.listen(port, () => {
