@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import EditEmployeeModal from '../Components/EditEmployeeModal'
+import MembersList from '../Components/MembersList'
 
 const Admin = () => {
   const [employees, setEmployees] = useState([])
   const [editingEmployee, setEditingEmployee] = useState(null)
+  const [members, setMembers] = useState([])
 
   const handleEditEmployee = (employee) => {
     setEditingEmployee(employee)
@@ -21,6 +23,24 @@ const Admin = () => {
       })
       .catch((error) => console.error('Error fetching employee data:', error))
   }, [employees])
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/get/users/user');
+        if (response.ok) {
+          const data = await response.json();
+          setMembers(data);
+        } else {
+          console.error('Error fetching members:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching members:', error);
+      }
+    };
+
+    fetchMembers();
+  }, [members]);
 
   const handleSaveEmployee = (updatedEmployee) => {
     fetch(`http://localhost:3001/edit/employee/${updatedEmployee.id}`, {
@@ -117,6 +137,9 @@ const Admin = () => {
           </tbody>
         </table>
       </div>
+      <MembersList
+        members={members}
+      />
       {editingEmployee && (
         <EditEmployeeModal
           onCancel={handleCancelEditEmployee}

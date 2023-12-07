@@ -86,8 +86,18 @@ app.get("/user-info", verifyToken, (req, res) => {
 app.post("/register", (req, res) => {
   const { firstname, lastname, username, email, password, role } = req.body;
 
+  // Set default role to "user" if not provided
+  const userRole = role || "user";
+
   // Validate input
-  if (!username || !email || !password || !firstname || !lastname || !role) {
+  if (
+    !username ||
+    !email ||
+    !password ||
+    !firstname ||
+    !lastname ||
+    !userRole
+  ) {
     return res
       .status(400)
       .json({ message: "Please provide all required fields." });
@@ -113,10 +123,10 @@ app.post("/register", (req, res) => {
         return res.status(400).json({ message: "User already exists." });
       }
 
-      // Store the user in the database with the hashed password
+      // Store the user in the database with the hashed password and default role
       db.query(
         "INSERT INTO users (username, email, password, firstname, lastname, role) VALUES (?, ?, ?, ?, ?, ?)",
-        [username, email, hashedPassword, firstname, lastname, role], // Use hashed password
+        [username, email, hashedPassword, firstname, lastname, userRole], // Use hashed password and default role
         (err, results) => {
           if (err) {
             console.error("Database error:", err);
@@ -124,7 +134,7 @@ app.post("/register", (req, res) => {
           }
 
           // Check if the role is admin to insert into employees table
-          if (role === "admin") {
+          if (userRole === "admin") {
             const userId = results.insertId; // Get the ID of the inserted user
 
             // Insert into employees table with the user's ID
@@ -139,9 +149,23 @@ app.post("/register", (req, res) => {
                     .json({ message: "Internal server error." });
                 }
 
-                return res
-                  .status(200)
-                  .json({ message: "Registration successful." });
+                // Set membership column to "admin" for admin users
+                db.query(
+                  "UPDATE users SET membership = ? WHERE id = ?",
+                  ["admin", userId],
+                  (err) => {
+                    if (err) {
+                      console.error("Database error:", err);
+                      return res
+                        .status(500)
+                        .json({ message: "Internal server error." });
+                    }
+
+                    return res
+                      .status(200)
+                      .json({ message: "Registration successful." });
+                  }
+                );
               }
             );
           } else {
@@ -423,33 +447,119 @@ app.delete("/delete/employee/:id", (req, res) => {
     return res.status(400).json({ message: "Please provide an employee ID." });
   }
 
-  // Delete the employee from the employees table
+  // Retrieve user_id before deleting from employees table
+  let userId;
+
   db.query(
-    "DELETE FROM employees WHERE employee_id = ?",
+    "SELECT user_id FROM employees WHERE employee_id = ?",
     [employeeId],
     (err, results) => {
       if (err) {
-        console.error("Error deleting from employees table:", err);
+        console.error("Error retrieving user_id:", err);
         return res.status(500).json({ message: "Internal server error." });
       }
 
-      // Delete the corresponding user from the users table
+      userId = results[0]?.user_id;
+
+      // Delete the employee from the employees table
       db.query(
-        "DELETE FROM users WHERE id = (SELECT user_id FROM employees WHERE employee_id = ?)",
+        "DELETE FROM employees WHERE employee_id = ?",
         [employeeId],
         (err, results) => {
           if (err) {
-            console.error("Error deleting from users table:", err);
+            console.error("Error deleting from employees table:", err);
             return res.status(500).json({ message: "Internal server error." });
           }
 
-          return res
-            .status(200)
-            .json({ message: "Employee deleted successfully." });
+          // Delete the corresponding user from the users table
+          db.query(
+            "DELETE FROM users WHERE id = ?",
+            [userId],
+            (err, results) => {
+              if (err) {
+                console.error("Error deleting from users table:", err);
+                return res
+                  .status(500)
+                  .json({ message: "Internal server error." });
+              }
+
+              return res
+                .status(200)
+                .json({ message: "Employee deleted successfully." });
+            }
+          );
         }
       );
     }
   );
+});
+
+app.get("/get/users/:role", (req, res) => {
+  const requestedRole = req.params.role;
+
+  // Validate input
+  if (!requestedRole) {
+    return res.status(400).json({ message: "Please provide a user role." });
+  }
+
+  // SQL query to retrieve users based on role
+  const sql = "SELECT * FROM users WHERE role = ?";
+
+  // Execute the query
+  db.query(sql, [requestedRole], (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ message: "Internal server error." });
+    }
+
+    // Send the retrieved users as JSON
+    res.status(200).json(results);
+  });
+});
+
+app.put("/edit/member/:id", (req, res) => {
+  const memberId = req.params.id;
+  const { newLastName, newFirstName, newMembership } = req.body;
+
+  // Validate input
+  if (!newLastName || !newFirstName || !newMembership) {
+    return res
+      .status(400)
+      .json({ message: "Please provide both name and membership." });
+  }
+
+  // Update the users table
+  db.query(
+    "UPDATE users SET lastname = ?, firstname = ?, membership = ? WHERE id = ?",
+    [newLastName, newFirstName, newMembership, memberId],
+    (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Internal server error." });
+      }
+
+      return res.status(200).json({ message: "Member updated successfully." });
+    }
+  );
+});
+
+app.delete("/delete/member/:id", (req, res) => {
+  const memberId = req.params.id;
+
+  // Validate input
+  if (!memberId) {
+    return res.status(400).json({ message: "Please provide a member ID." });
+  }
+
+  // Delete the corresponding user from the users table
+  db.query("DELETE FROM users WHERE id = ?", [memberId], (err, results) => {
+    if (err) {
+      console.error("Error deleting from users table:", err);
+      return res.status(500).json({ message: "Internal server error." });
+    }
+
+    return res.status(200).json({ message: "Member deleted successfully." });
+  });
 });
 
 app.get("/user-id", verifyToken, (req, res) => {
