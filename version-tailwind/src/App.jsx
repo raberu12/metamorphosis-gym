@@ -94,23 +94,25 @@ const App = () => {
   return (
     <UserProvider>
       <Router>
-        <div>
+        <div className="flex min-h-screen flex-col">
           <Sidebar />
           <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/OverviewPage" element={<Overview />} />
-            <Route path="/overviewmember" element={<OverviewM />} />
-            <Route path="/MembershipPage" element={<MembershipPlans />} />
-            <Route path="/ConsultationPage" element={<Consultation />} />
-            <Route path="/training" element={<Training />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/gym" element={<Gym />} />
-            <Route path="/admin" element={<Admin />} />
-          </Routes>
+          <div className="flex-1">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/OverviewPage" element={<Overview />} />
+              <Route path="/MembershipPage" element={<MembershipPlans />} />
+              <Route path="/ConsultationPage" element={<Consultation />} />
+              <Route path="/training" element={<Training />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/gym" element={<Gym />} />
+              <Route path="/overviewmember" element={<OverviewM />} />
+              <Route path="/admin" element={<Admin />} />
+            </Routes>
+          </div>
           <Footer />
         </div>
       </Router>
