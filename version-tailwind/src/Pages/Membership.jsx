@@ -1,11 +1,20 @@
 import React, { useState } from 'react'
-
+import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../Components/UserContext'
 
 const MembershipPlans = () => {
   const [selectedPlan, setSelectedPlan] = useState(null)
   const { userData } = useUserContext()
   var userIdFromApi = 0
+
+  const navigate = useNavigate();
+
+  const handleConfirmSubscription = () => {
+    // Perform any necessary actions before navigating, if needed
+
+    // Navigate to '/overviewmember' page
+    navigate('/overviewmember');
+  };
 
   const plans = [
     {
@@ -111,9 +120,10 @@ const MembershipPlans = () => {
             >
               Close
             </button>
+
             <button
               className="mr-2 rounded bg-red-500 px-4 py-2 text-white"
-              onClick={onClose}
+               onClick={handleConfirmSubscription}
             >
               Confirm Subscription
             </button>

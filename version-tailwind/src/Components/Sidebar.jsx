@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect} from 'react'
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useUserContext } from './UserContext'
+
+
 
 function Sidebar() {
   const navigate = useNavigate()
@@ -10,52 +12,67 @@ function Sidebar() {
   const areObjectsEqual = (obj1, obj2) => {
     return JSON.stringify(obj1) === JSON.stringify(obj2)
   }
+  
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem('token');
 
         if (token) {
-          const response = await fetch('http://localhost:3001/user-info', {
+          const response = await fetch('http://localhost:3001/user-id', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
               Authorization: token,
             },
-          })
+          });
 
           if (response.ok) {
-            const data = await response.json()
-            if (!areObjectsEqual(userData, data)) {
+            const data = await response.json();
+
+            // Check for undefined and replace it with the default value
+            const updatedUserData = {
+              ...data,
+              membership: data.membership !== undefined ? data.membership : 'default',
+            };
+
+            if (!areObjectsEqual(userData, updatedUserData)) {
               // Update the user data in the context only if it has changed
-              updateUser(data)
+              updateUser(updatedUserData);
             }
           } else {
-            console.error('Failed to fetch user information')
+            console.error('Failed to fetch user information:', response.statusText);
           }
         }
       } catch (error) {
-        console.error('Error during user information fetch:', error)
+        console.error('Error during user information fetch:', error);
       }
-    }
+    };
 
-    fetchUserInfo()
-  }, [updateUser, userData])
+    fetchUserInfo();
+  }, [updateUser, userData]);
+
+  const isUserSubscribed = userData && userData.membership !== 'unsubscribed';
+
+  console.log('userData:', userData);
+  console.log('isUserSubscribed:', isUserSubscribed);
+
+ 
+
 
   const sidebarLinks = [
-    { to: '/OverviewPage', text: 'Overview' },
+    { to: isUserSubscribed ? '/overviewmember' : '/OverviewPage', text: 'Overview' },
     { to: '/MembershipPage', text: 'Membership' },
     { to: '/ConsultationPage', text: 'Consultation' },
-    { to: '/EmailalertsPage', text: 'Email Alerts' },
     { to: '/SettingsPage', text: 'Settings' },
-  ]
+  ];
 
   const sidebarIcon = {
     OverviewPage: './images/overviewicon.png',
+    overviewmember: './images/overviewicon.png',
     MembershipPage: './images/membership.png',
     ConsultationPage: './images/consultation.png',
-    EmailalertsPage: './images/emailalert.png',
     SettingsPage: './images/settings.png',
   }
 
@@ -90,13 +107,21 @@ function Sidebar() {
     return null
   }
 
+
+
   return (
     <div
       className={`fixed mx-auto h-full w-52 bg-dark-elixir text-white transition-opacity duration-700 ${
-        isHovered ? 'opacity-100' : 'opacity-0'
+        isHovered ? 'opacity-100' : 'opacity-100'
       }`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => {
+        console.log('Mouse entered');
+        setIsHovered(true);
+      }}
+      onMouseLeave={() => {
+        console.log('Mouse left');
+        setIsHovered(false);
+      }}
     >
       <div className="flex flex-col text-center">
         <div className="mb-20 mt-8">
