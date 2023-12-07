@@ -8,9 +8,9 @@ function OverviewM() {
   const [workoutOptions, setWorkoutOptions] = useState([]);
   const [selectedCategoryImage, setSelectedCategoryImage] = useState(null);
   const [statusOptions] = useState([
-    { value: 'notStarted', label: 'Not Started', color: '#595358' },
-    { value: 'inProgress', label: 'In Progress', color: '#A4AF69' },
-    { value: 'completed', label: 'Completed', color: '#C84630' },
+    { value: 'notStarted', label: 'Not Started', color: '#942911' },
+    { value: 'inProgress', label: 'In Progress', color: '#E59500' },
+    { value: 'completed', label: 'Completed', color: '#0C8346' },
   ]);
 
   useEffect(() => {
