@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
 import About from './Pages/About'
 import Register from './Pages/Register'
 import Gym from './Pages/Gym'
@@ -32,9 +32,12 @@ const Home = () => {
           <p className="mt-4 text-xl italic text-white">
             Take control, transform your soul
           </p>
-          <button className="mt-4 w-36 rounded bg-orangish p-2 font-semibold italic text-white transition duration-300 hover:bg-red-900">
-            GET STARTED
+          <Link to="/register">
+            <button className="mt-4 w-36 rounded bg-orangish p-2 font-semibold italic text-white transition duration-300 hover:bg-red-900">
+              GET STARTED
           </button>
+          </Link>
+          
         </div>
       </div>
       {/* Content */}

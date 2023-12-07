@@ -75,6 +75,8 @@ app.get("/user-info", verifyToken, (req, res) => {
     name: req.user.username,
     role: req.user.role,
     id: req.user.id,
+
+    membership: req.user.membership
     // Other user-related data
   };
 
@@ -562,19 +564,77 @@ app.delete("/delete/member/:id", (req, res) => {
   });
 });
 
-app.get("/user-id", verifyToken, (req, res) => {
-  // Log the decoded user object
-  console.log("Decoded user object:", req.user);
+app.get("/user-id", verifyToken, async (req, res) => {
+  try {
+    // Log the decoded user object
+    console.log("Decoded user object:", req.user);
 
-  // Fetch user information from the database
-  const userInfo = {
-    id: req.user.id,
-    member: req.user.membership,
-    // Other user-related data
-  };
+    // Fetch user information from the database
+    const dbResults = await new Promise((resolve, reject) => {
+      db.query(
+        "SELECT id, membership FROM users WHERE id = ?",
+        [req.user.id],
+        (error, results) => {
+          if (error) {
+            console.error("Error fetching user information:", error);
+            reject(error);
+            return;
+          }
 
-  // Send the user information as a response
-  res.json(userInfo);
+          console.log("Query results:", results);
+
+          if (results.length === 0) {
+            // User not found
+            reject({ status: 404, message: "User not found" });
+            return;
+          }
+
+          // Resolve with the results
+          resolve(results[0]);
+        }
+      );
+    });
+
+    // Extract membership status from the database results with a default value
+    const { id: dbUserId, membership } = dbResults;
+
+    // Combine database results with additional user information from the token
+    const userInfo = {
+      id: dbUserId,
+      membership,
+      name: req.user.username,
+      role: req.user.role,
+      // Add other user-related data as needed
+    };
+
+    // Log combined user information
+    console.log("Combined user information:", userInfo);
+
+    // Send the user information as a response
+    res.status(200).json(userInfo);
+  } catch (error) {
+    // Handle errors
+    res.status(error.status || 500).json({ message: error.message || "Internal Server Error" });
+  }
+});
+
+app.get("/trainer-name", (req, res) => {
+  db.query(
+    "SELECT fullName FROM employees",
+    (error, results, fields) => {
+      if (error) {
+        console.error("Error fetching trainer names:", error);
+        res.status(500).send("Internal Server Error");
+        return;
+      }
+
+      // Extract the full names from the results
+      const trainerNames = results.map((employee) => employee.fullName);
+
+      // Send the response with the full names
+      res.json(trainerNames);
+    }
+  );
 });
 
 // Start the server

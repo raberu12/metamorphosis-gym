@@ -1,17 +1,30 @@
-import React from 'react';
+import { useState, useEffect } from "react";
 
 function Consultation() {
+  const [trainerNames, setTrainerNames] = useState([]);
+
+  useEffect(() => {
+    // Fetch the trainer names from the API endpoint
+    fetch('http://localhost:3001/trainer-name')
+      .then(response => response.json())
+      .then(data => setTrainerNames(data))
+      .catch(error => console.error('Error fetching trainer names:', error));
+  }, []);
+
+
+
+
   return (
     <>
-      <h1 className='ml-56 mb-3 text-7xl font-extrabold text-dark-elixir'>BOOK A CONSULTATION</h1>
-      <div className='flex flex-col items-center ml-64 mt-16 h-full'>
+      <h1 className='ml-56 mb-8 text-7xl font-extrabold text-dark-elixir'>BOOK A CONSULTATION</h1>
+      <form className='flex flex-col items-center ml-24 mt-16 h-full mb-80'>
         <div className='bg-black text-white w-2/5 h- mr-16 rounded-lg'>
-          <h2 className='text-center font-bold text-5xl mt-2'>CONSULTATION FORM</h2>
+          <h2 className='text-center font-bold text-5xl my-10'>CONSULTATION FORM</h2>
           <div className='flex flex-wrap justify-between px-8 mr-6 mt-4 '>
             <div className='mb-4'>
               <label>
                 <h3 className='text-xl'>Name</h3>
-                <input type="text" className='w-64 h-8 text-black border-none rounded-sm' />
+                <input type="text" className='w-64 h-8 text-black  rounded-sm' />
               </label>
             </div>
             <div className='mb-4'>
@@ -23,7 +36,7 @@ function Consultation() {
             <div className='mb-4'>
               <label>
                 <h3 className='text-xl'>Phone Number</h3>
-                <input type="number" className='w-64 h-8 text-black rounded-sm appearance-none' />
+                <input type="number" className='w-64 h-8 text-black rounded-sm' />
               </label>
             </div>
             <div className='mb-4'>
@@ -35,13 +48,10 @@ function Consultation() {
             <div className=' flex-grow'>
               <label className='text-xl'>Select a Trainer</label>
               <select className='w-full h-8 text-black rounded-sm mb-4'>
-                <option value="Trainer 1">Coach 1</option>
-                <option value="Trainer 2">Coach 2</option>
-                <option value="Trainer 3">Coach 3</option>
+                {trainerNames.map((trainerName, index) => (
+                  <option key={index} value={trainerName}>{trainerName}</option>
+                ))}
               </select>
-              <label className='text-xl'>Message</label>
-              <br/>
-              <textarea className='w-full h-64 rounded-sm'></textarea>
             </div>      
           </div>
           <div className='text-center mt-4 mb-4'>
@@ -53,7 +63,7 @@ function Consultation() {
               </button>
           </div>
         </div>
-      </div>
+      </form>
     </>
   );
 }
