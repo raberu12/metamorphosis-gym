@@ -152,7 +152,7 @@ const handleStatusChange = async (workout_id,id, value) => {
   }
 
   return (
-    <div className='flex justify-center items-center h-auto pt-16 drop-shadow-2xl mb-32'>
+    <div className='flex justify-center items-center h-auto pt-16 mb-32'>
       <div className='bg-dark-elixir ml-40 w-5/6 h-5/6 rounded-md text-white'>
         <div>
           <h1 className='text-left text-6xl font-extrabold m-4'> My task </h1>

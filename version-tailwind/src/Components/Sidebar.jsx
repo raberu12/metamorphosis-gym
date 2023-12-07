@@ -65,6 +65,7 @@ function Sidebar() {
     { to: isUserSubscribed ? '/overviewmember' : '/OverviewPage', text: 'Overview' },
     { to: '/MembershipPage', text: 'Membership' },
     { to: '/ConsultationPage', text: 'Consultation' },
+    { to: '/Emailalertspage', text: 'Email Alerts'},
     { to: '/SettingsPage', text: 'Settings' },
   ];
 
@@ -73,6 +74,7 @@ function Sidebar() {
     overviewmember: './images/overviewicon.png',
     MembershipPage: './images/membership.png',
     ConsultationPage: './images/consultation.png',
+    Emailalertspage: '/images/emailalert.png',
     SettingsPage: './images/settings.png',
   }
 
