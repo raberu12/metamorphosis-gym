@@ -39,7 +39,7 @@ function About() {
             src="./images/profile1.png"
             alt="Profile 1"
           />
-          <div className="m-0 flex h-32 w-full flex-col justify-between bg-blue-900 p-0">
+          <div className="m-0 flex h-32 w-full flex-col justify-between bg-dark-elixir p-0">
             <h2 className="text-center text-4xl font-bold my-2">
               Ray Emanuel Patalinhug
             </h2>
@@ -52,7 +52,7 @@ function About() {
             src="./images/profile2.jpg"
             alt="Profile 2"
           />
-          <div className="m-0 flex h-32 w-full flex-col justify-between bg-blue-900 p-0">
+          <div className="m-0 flex h-32 w-full flex-col justify-between bg-dark-elixir p-0">
             <h2 className="text-center text-4xl font-bold my-2">
               Hiroshi Curimatmat
             </h2>
@@ -65,7 +65,7 @@ function About() {
             src="./images/profile3.jpg"
             alt="Profile 3"
           />
-          <div className="m-0 flex h-32 w-full flex-col justify-between bg-blue-900 p-0">
+          <div className="m-0 flex h-32 w-full flex-col justify-between bg-dark-elixir p-0">
             <h2 className="text-center text-4xl font-bold my-2">
               Jedd Christian Juab
             </h2>
@@ -78,7 +78,7 @@ function About() {
             src="./images/profile4.png"
             alt="Profile 4"
           />
-          <div className="m-0 flex h-32 w-full flex-col justify-between bg-blue-900 p-0">
+          <div className="m-0 flex h-32 w-full flex-col justify-between bg-dark-elixir p-0">
             <h2 className="text-center text-4xl font-bold my-2">
               Matt Vincent Magdadaro
             </h2>
