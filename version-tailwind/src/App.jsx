@@ -16,6 +16,7 @@ import Login from './Pages/Login'
 import { UserProvider } from './Components/UserContext'
 import OverviewM from './Pages/OverviewM'
 import Admin from './Pages/Admin'
+import EmailalertsPage from './Pages/Emailalertspage'
 
 const Home = () => {
   return (
@@ -111,6 +112,7 @@ const App = () => {
               <Route path="/gym" element={<Gym />} />
               <Route path="/overviewmember" element={<OverviewM />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/Emailalertspage" element={<EmailalertsPage />} />
             </Routes>
           </div>
           <Footer />

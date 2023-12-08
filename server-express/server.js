@@ -637,6 +637,129 @@ app.get("/trainer-name", (req, res) => {
   );
 });
 
+app.post("/api/consultation", verifyToken, async (req, res) => {
+  try {
+    const { full_name, email, phone_number, date, user_id } = req.body;
+    const status = 'Pending'; // Set the default status
+
+    // Insert data into the consultation_progress table
+    const result = await new Promise((resolve, reject) => {
+      db.query(
+        "INSERT INTO consultation_progress (user_id, full_name, email, phone_number, date, status) VALUES (?, ?, ?, ?, ?, ?)",
+        [user_id, full_name, email, phone_number, date, status],
+        (err, result) => {
+          if (err) reject(err);
+          resolve(result);
+        }
+      );
+    });
+
+    // Send a success response
+    res.status(200).json({ message: "Consultation submitted successfully", result });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error.", error });
+  }
+});
+
+
+app.get("/api/consultation-user-id", verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    res.status(200).json({ user_id: userId });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error.", error });
+  }
+});
+
+// API endpoint to retrieve consultation progress data
+app.get("/api/consultation-progress", async (req, res) => {
+  try {
+    // Fetch data from the 'consultation_progress' table
+    const consultationProgressData = await new Promise((resolve, reject) => {
+      db.query("SELECT * FROM consultation_progress", (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    // Send the consultation progress data as a JSON response
+    res.status(200).json(consultationProgressData);
+  } catch (error) {
+    console.error("Error fetching consultation progress data:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// API endpoint to update consultation status (approve, cancel, remove)
+app.put("/api/update-consultation/:id", async (req, res) => {
+  const consultationId = req.params.id;
+  const { action } = req.body;
+
+  try {
+    // Validate input
+    if (!action || !["approved", "cancelled", "removed"].includes(action)) {
+      throw new Error("Invalid action.");
+    }
+
+    // Update consultation status in the database
+    const updateQuery = `
+      UPDATE consultation_progress
+      SET status = ?
+      WHERE id = ?;
+    `;
+
+    db.query(updateQuery, [action, consultationId], (err, updateResults) => {
+      if (err) {
+        console.error("Database error (updateQuery):", err);
+        throw new Error("Internal server error.");
+      }
+
+      console.log("Consultation status updated:", updateResults);
+
+      // Send a success response
+      res.status(200).json({
+        message: "Consultation status updated successfully",
+        updatedData: { id: consultationId, status: action },
+      });
+    });
+  } catch (error) {
+    console.error("Error updating consultation status:", error);
+    res.status(500).json({ message: error.message || "Internal server error." });
+  }
+});
+
+// API endpoint to delete a consultation
+app.delete("/api/delete-consultation/:id", (req, res) => {
+  const consultationId = req.params.id;
+
+  // Perform the deletion operation in the database
+  const deleteQuery = `
+    DELETE FROM consultation_progress
+    WHERE id = ?;
+  `;
+
+  db.query(deleteQuery, [consultationId], (err, deleteResults) => {
+    if (err) {
+      console.error("Database error (deleteQuery):", err);
+      return res.status(500).json({ message: "Internal server error." });
+    }
+
+    console.log("Consultation removed:", deleteResults);
+
+    // Send a success response
+    res.status(200).json({
+      message: "Consultation deleted successfully",
+      deletedData: { id: consultationId },
+    });
+  });
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
