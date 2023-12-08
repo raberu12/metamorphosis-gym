@@ -67,29 +67,29 @@ function EmailalertsPage() {
 
   return (
     <div>
-      <table className='border-collapse mt-28 mb-52 ml-96 border-2 border-black'>
+      <table className=' mt-28 mb-52 ml-96 text-gray-500'>
         <thead>
-          <tr className='bg-slate-500'>
-            <th className='border-2 font-bold border-black p-4 w-44'>Full Name</th>
-            <th className='border-2 font-bold border-black p-4 w-44'>Email</th>
-            <th className='border-2 font-bold border-black p-4 w-44'>Phone Number</th>
-            <th className='border-2 font-bold border-black p-4 w-44'>Date</th>
-            <th className='border-2 font-bold border-black p-4 w-44'>Status</th>
-            <th className='border-2 font-bold border-black p-3'>Action</th>
+          <tr className='border-2'>
+            <th className='border-2  p-4 w-44'>NAME</th>
+            <th className='border-2  p-4 w-44'>EMAIL</th>
+            <th className='border-2  p-4 w-44'>PHONE NUMBER</th>
+            <th className='border-2  p-4 w-44'>DATE</th>
+            <th className='border-2  p-4 w-44'>STATUS</th>
+            <th className='border-2  p-4 w-44'>ACTIONS</th>
           </tr>
         </thead>
         <tbody>
           {data.map((item, index) => (
-            <tr key={index}>
-              <td className='border-2 p-1 text-center border-black'>{item.full_name}</td>
-              <td className='border-2 p-1 text-center border-black'>{item.email}</td>
-              <td className='border-2 p-1 text-center border-black'>{item.phone_number}</td>
-              <td className='border-2 p-1 text-center border-black'>{item.date}</td>
-              <td className='border-2 p-1 text-center border-black'>{item.status}</td>
-              <td className='border border-black flex flex-col items-center p-1'>
-                <button className='text-center text-sm items-center font-semibold border border-black flex mb-1 rounded-md w-16 justify-center bg-green-500 transition duration-400 hover:scale-105 hover:bg-green-600' onClick={() => handleAction('approved', item.id)}>Approve</button>
-                <button className='text-center text-sm items-center font-semibold border border-black flex mb-1 rounded-md w-16 justify-center bg-red-600 transition duration-400 hover:scale-105 hover:bg-red-700' onClick={() => handleAction('cancelled', item.id)}>Cancel</button>
-                <button className='text-center text-sm items-center font-semibold border border-black flex mb-1 rounded-md w-16 justify-center bg-gray-400 transition duration-400 hover:scale-105 hover:bg-gray-500' onClick={() => handleAction('removed', item.id)}>Remove</button>
+            <tr key={index} className='text-black text-center'>
+              <td className='border-2 p-1 '>{item.full_name}</td>
+              <td className='border-2 p-4 '>{item.email}</td>
+              <td className='border-2 p-1 '>{item.phone_number}</td>
+              <td className='border-2 p-1 '>{item.date}</td>
+              <td className='border-2 p-1 '>{item.status}</td>
+              <td className='border flex flex-rowitems-center p-1 text-white'>
+                <button className='text-center text-sm items-center font-semibold border flex my-2 ml-2 rounded w-16 justify-center p-2 bg-green-500 transition duration-400 hover:scale-105 hover:bg-green-600' onClick={() => handleAction('approved', item.id)}>Approve</button>
+                <button className='text-center text-sm items-center font-semibold border flex my-2 ml-2 rounded w-16 justify-center p-2 bg-red-600 text-white hover:text-red-900 transition duration-400 hover:scale-105' onClick={() => handleAction('cancelled', item.id)}>Cancel</button>
+                <button className='text-center text-sm items-center font-semibold border flex my-2 ml-2 rounded w-16 justify-center p-2 bg-gray-400 transition duration-400 hover:scale-105 hover:bg-gray-500' onClick={() => handleAction('removed', item.id)}>Remove</button>
               </td>
             </tr>
           ))}

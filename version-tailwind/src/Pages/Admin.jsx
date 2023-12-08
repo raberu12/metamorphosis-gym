@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import EditEmployeeModal from '../Components/EditEmployeeModal'
 import MembersList from '../Components/MembersList'
+import EmailalertsPage from './Emailalertspage'
 
 const Admin = () => {
   const [employees, setEmployees] = useState([])
@@ -147,6 +148,8 @@ const Admin = () => {
           handleSave={handleSaveEmployee}
         />
       )}
+      <h2 className="mt-6 text-xl font-bold">Consultation Approval</h2>
+      <EmailalertsPage/>
     </div>
   )
 }

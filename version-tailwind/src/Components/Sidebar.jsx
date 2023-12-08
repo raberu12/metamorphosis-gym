@@ -70,7 +70,6 @@ function Sidebar() {
     },
     { to: '/MembershipPage', text: 'Membership' },
     { to: '/ConsultationPage', text: 'Consultation' },
-    { to: '/Emailalertspage', text: 'Email Alerts' },
   ]
 
   const sidebarIcon = {
@@ -78,7 +77,6 @@ function Sidebar() {
     overviewmember: './images/overviewicon.png',
     MembershipPage: './images/membership.png',
     ConsultationPage: './images/consultation.png',
-    Emailalertspage: '/images/emailalert.png',
   }
 
   const handleLogout = async () => {

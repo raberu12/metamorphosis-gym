@@ -15,7 +15,9 @@ A repository of our gym project for IM/WEBDEV that utilizes react, mysql, expres
 - react-icons
 - react-router-dom
 - jwt-decode
+- react-modal
 - ### Server
+- nodemon
 - express
 - cors
 - mysql2

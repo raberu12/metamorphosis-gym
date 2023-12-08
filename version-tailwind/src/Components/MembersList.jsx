@@ -54,7 +54,7 @@ const MembersList = ({ members }) => {
 
   return (
     <div>
-      <h2 className="mb-2 text-xl font-bold">Members List</h2>
+      <h2 className="mb-2 mt-6 text-xl font-bold">Members List</h2>
       <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
