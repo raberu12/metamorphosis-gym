@@ -17,7 +17,6 @@ const Login = () => {
   const navigate = useNavigate()
   const { updateUser } = useUserContext()
 
-  // Assuming this is in the component where the login logic is implemented
 
   const handleLogin = async () => {
     let token // Declare token here
@@ -37,14 +36,11 @@ const Login = () => {
       if (response.ok) {
         console.log('Login successful:', data)
 
-        // Store the token in localStorage
         token = data.token
         localStorage.setItem('token', token)
 
-        // Decode the token to access user information
         const decodedToken = jwtDecode(token)
 
-        // Assuming you have a function to update the user data context
         updateUser({
           id: decodedToken.id,
           role: decodedToken.role,
@@ -52,8 +48,6 @@ const Login = () => {
         })
 
         console.log('User Data:', decodedToken)
-
-        // Check the role in the response and redirect accordingly
         console.log('User Role:', decodedToken.role)
 
         if (decodedToken.role === 'admin') {

@@ -42,6 +42,7 @@ const db = mysql.createConnection({
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
+  console.log('Received Token:', token);
 
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -76,7 +77,7 @@ app.get("/user-info", verifyToken, (req, res) => {
     role: req.user.role,
     id: req.user.id,
 
-    membership: req.user.membership
+    membership: req.user.membership,
     // Other user-related data
   };
 
@@ -223,11 +224,41 @@ app.post("/login", (req, res) => {
 
       // Generate a token and include the role in the payload
       const token = jwt.sign(
-        { username, role: results[0].role, id: results[0].id }, // Include role in the payload
+        {
+          username,
+          role: results[0].role,
+          id: results[0].id,
+          email: results[0].email,
+          membership: results[0].membership,
+        },
         secretKey,
         { expiresIn: "1h" }
       );
       res.status(200).json({ message: "Login successful.", token });
+    }
+  );
+});
+
+app.post("/updateprofile", verifyToken, (req, res) => {
+  const { id } = req.user;
+  const { newUsername } = req.body;
+
+  if (!newUsername) {
+    return res
+      .status(400)
+      .json({ message: "Please provide the new username." });
+  }
+
+  db.query(
+    "UPDATE users SET username = ? WHERE id = ?",
+    [newUsername, id],
+    (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Internal server error." });
+      }
+
+      res.status(200).json({ message: "Username updated successfully." });
     }
   );
 });
@@ -602,7 +633,7 @@ app.get("/user-id", verifyToken, async (req, res) => {
     const userInfo = {
       id: dbUserId,
       membership,
-      name: req.user.username,
+      username: req.user.username,
       role: req.user.role,
       // Add other user-related data as needed
     };
@@ -614,33 +645,32 @@ app.get("/user-id", verifyToken, async (req, res) => {
     res.status(200).json(userInfo);
   } catch (error) {
     // Handle errors
-    res.status(error.status || 500).json({ message: error.message || "Internal Server Error" });
+    res
+      .status(error.status || 500)
+      .json({ message: error.message || "Internal Server Error" });
   }
 });
 
 app.get("/trainer-name", (req, res) => {
-  db.query(
-    "SELECT fullName FROM employees",
-    (error, results, fields) => {
-      if (error) {
-        console.error("Error fetching trainer names:", error);
-        res.status(500).send("Internal Server Error");
-        return;
-      }
-
-      // Extract the full names from the results
-      const trainerNames = results.map((employee) => employee.fullName);
-
-      // Send the response with the full names
-      res.json(trainerNames);
+  db.query("SELECT fullName FROM employees", (error, results, fields) => {
+    if (error) {
+      console.error("Error fetching trainer names:", error);
+      res.status(500).send("Internal Server Error");
+      return;
     }
-  );
+
+    // Extract the full names from the results
+    const trainerNames = results.map((employee) => employee.fullName);
+
+    // Send the response with the full names
+    res.json(trainerNames);
+  });
 });
 
 app.post("/api/consultation", verifyToken, async (req, res) => {
   try {
     const { full_name, email, phone_number, date, user_id } = req.body;
-    const status = 'Pending'; // Set the default status
+    const status = "Pending"; // Set the default status
 
     // Insert data into the consultation_progress table
     const result = await new Promise((resolve, reject) => {
@@ -655,13 +685,14 @@ app.post("/api/consultation", verifyToken, async (req, res) => {
     });
 
     // Send a success response
-    res.status(200).json({ message: "Consultation submitted successfully", result });
+    res
+      .status(200)
+      .json({ message: "Consultation submitted successfully", result });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ message: "Internal server error.", error });
   }
 });
-
 
 app.get("/api/consultation-user-id", verifyToken, async (req, res) => {
   try {
@@ -730,7 +761,9 @@ app.put("/api/update-consultation/:id", async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating consultation status:", error);
-    res.status(500).json({ message: error.message || "Internal server error." });
+    res
+      .status(500)
+      .json({ message: error.message || "Internal server error." });
   }
 });
 
