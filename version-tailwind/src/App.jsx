@@ -1,8 +1,7 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
 import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 import About from './Pages/About'
 import Register from './Pages/Register'
 import Gym from './Pages/Gym'
@@ -13,10 +12,21 @@ import Overview from './Pages/Overview'
 import Training from './Pages/Training'
 import Blog from './Pages/Blog'
 import Login from './Pages/Login'
-import { UserProvider } from './Components/UserContext'
+import { UserProvider, useUserContext } from './Components/UserContext'
 import OverviewM from './Pages/OverviewM'
 import Admin from './Pages/Admin'
-import EmailalertsPage from './Pages/Emailalertspage'
+
+const PrivateRoute = ({ element, adminOnly }) => {
+  const { userData } = useUserContext()
+
+  // Check if the user is an admin, otherwise redirect to login
+  if (adminOnly && (!userData || userData.role !== 'admin')) {
+    // You may want to redirect to a login page or show an access denied message
+    return <Navigate to="/" />
+  }
+
+  return element
+}
 
 const Home = () => {
   return (
@@ -33,12 +43,6 @@ const Home = () => {
           <p className="mt-4 text-xl italic text-white">
             Take control, transform your soul
           </p>
-          <Link to="/register">
-            <button className="mt-4 w-36 rounded bg-orangish p-2 font-semibold italic text-white transition duration-300 hover:bg-red-900">
-              GET STARTED
-          </button>
-          </Link>
-          
         </div>
       </div>
       {/* Content */}
@@ -111,8 +115,10 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/gym" element={<Gym />} />
               <Route path="/overviewmember" element={<OverviewM />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/Emailalertspage" element={<EmailalertsPage />} />
+              <Route
+                path="/admin/*"
+                element={<PrivateRoute element={<Admin />} adminOnly />}
+              />
             </Routes>
           </div>
           <Footer />

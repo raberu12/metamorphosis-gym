@@ -60,7 +60,12 @@ function Navbar() {
 
   return (
     <div className="flex items-center justify-between bg-navbar">
-      <div className="ml-4 text-lg font-bold text-white">LOGO HERE</div>
+      <div className="ml-4 text-lg font-bold text-white">
+        {' '}
+        <Link to="/">
+          <img src="./images/logo.png" alt="Logo" className="ml-4 w-20" />
+        </Link>
+      </div>
       <div className="container mx-auto flex justify-center">
         <ul className="flex h-20 space-x-16 font-bold text-white">
           {navLinks.map((link, index) => (

@@ -75,7 +75,7 @@ function About() {
         <div className="flex h-full w-full flex-col rounded-lg bg-white p-0 shadow-lg">
           <img
             className="mx-auto h-full w-full flex-1"
-            src="./images/profile4.jpg"
+            src="./images/profile4.png"
             alt="Profile 4"
           />
           <div className="m-0 flex h-32 w-full flex-col justify-between bg-blue-900 p-0">
