@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2023 at 07:44 PM
+-- Generation Time: Dec 08, 2023 at 02:47 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -24,6 +24,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `consultation_progress`
+--
+
+CREATE TABLE `consultation_progress` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `full_name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `phone_number` varchar(255) DEFAULT NULL,
+  `date` varchar(255) DEFAULT NULL,
+  `status` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `employees`
 --
 
@@ -38,7 +54,9 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`employee_id`, `user_id`, `work_schedule`) VALUES
-(2, 6, 'No Work Schedule Set');
+(2, 6, 'No Work Schedule Set'),
+(9, 18, 'No Work Schedule Yet'),
+(10, 19, 'No Work Schedule Yet');
 
 -- --------------------------------------------------------
 
@@ -62,9 +80,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `email`, `password`, `role`, `membership`) VALUES
-(4, 'Shawn Ryan', 'Nacario', 'ryan', 'shawn@test.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'user', 'unsubscribed'),
-(6, 'Employee', 'Admin', 'admin', 'admin@admin.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin', 'unsubscribed'),
-(7, 'Test', 'Admin', 'admin2', 'admin2@admin.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin', 'unsubscribed');
+(6, 'Employee', 'Admin', 'admin', 'admin@admin.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin', 'admin'),
+(18, 'Test', 'Admin', 'admin2', 'admin2@admin.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin', 'admin'),
+(19, 'Jedd', 'Juab', 'admin3', 'admin3@admin.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin', 'admin'),
+(20, 'Shawn Ryan', 'Nacario', 'shawn2', 'shawn@test.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'user', 'basic');
 
 -- --------------------------------------------------------
 
@@ -131,6 +150,13 @@ INSERT INTO `workout` (`workout_id`, `category`, `exercise_name`, `sets`, `reps`
 --
 
 --
+-- Indexes for table `consultation_progress`
+--
+ALTER TABLE `consultation_progress`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id for users` (`user_id`);
+
+--
 -- Indexes for table `employees`
 --
 ALTER TABLE `employees`
@@ -162,16 +188,22 @@ ALTER TABLE `workout`
 --
 
 --
+-- AUTO_INCREMENT for table `consultation_progress`
+--
+ALTER TABLE `consultation_progress`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `user_progress`
@@ -188,6 +220,12 @@ ALTER TABLE `workout`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `consultation_progress`
+--
+ALTER TABLE `consultation_progress`
+  ADD CONSTRAINT `id for users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `employees`
