@@ -17,6 +17,12 @@ function EmailalertsPage() {
   
     // Call the fetchData function when the component mounts
     fetchData();
+    
+    // Set up an interval to fetch data every 0.5 seconds (500 milliseconds)
+  const intervalId = setInterval(fetchData, 500);
+
+  // Clear the interval when the component is unmounted
+  return () => clearInterval(intervalId);
   }, []);
 
   const handleAction = async (action, id) => {
